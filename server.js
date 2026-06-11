@@ -102,6 +102,18 @@ app.get('/clients', requireAuth, (req, res) => {
   res.json({ clients });
 });
 
+// ── POST /clients — register a new client with their prompts ──
+app.post('/clients', requireAuth, (req, res) => {
+  const { domain, prompts } = req.body || {};
+  if (!domain) return res.status(400).json({ error: 'domain is required' });
+  if (!Array.isArray(prompts) || prompts.length === 0) return res.status(400).json({ error: 'prompts array is required' });
+
+  const dir = path.join(__dirname, 'data', domain);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'prompts.json'), JSON.stringify(prompts, null, 2));
+  res.json({ ok: true, domain, prompt_count: prompts.length });
+});
+
 // ── GET /health ──
 app.get('/health', (_req, res) => res.json({ ok: true, jobs: jobs.size }));
 
