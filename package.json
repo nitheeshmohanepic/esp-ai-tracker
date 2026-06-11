@@ -1,0 +1,15 @@
+{
+  "name": "esp-ai-tracker",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "scan": "node scanner.js --domain epicslope.partners",
+    "scan:all": "node scanner.js --domain epicslope.partners && node scan-new-engines.js --domain epicslope.partners",
+    "report": "node generate-report.js --domain epicslope.partners"
+  },
+  "dependencies": {
+    "express": "^4.22.2",
+    "puppeteer-core": "^25.1.0"
+  }
+}

@@ -1,0 +1,6 @@
+.env
+node_modules/
+data/*/latest_scan.json
+data/*/visibility_report.pdf
+*.pdf
+.DS_Store

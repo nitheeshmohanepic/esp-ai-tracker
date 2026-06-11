@@ -1,0 +1,362 @@
+[
+  {
+    "id": "a1b2c3d4-0001-4000-8000-000000000001",
+    "query": "What is the best SaaS SEO agency for B2B companies?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0001-4000-8000-000000000002",
+    "query": "Which agencies specialize in SEO for SaaS businesses?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0001-4000-8000-000000000003",
+    "query": "Who are the top-rated SaaS SEO agencies I should consider hiring?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0002-4000-8000-000000000001",
+    "query": "What are the best enterprise SEO services available right now?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo services"
+  },
+  {
+    "id": "a1b2c3d4-0002-4000-8000-000000000002",
+    "query": "Which enterprise SEO service providers have the best track record?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo services"
+  },
+  {
+    "id": "a1b2c3d4-0002-4000-8000-000000000003",
+    "query": "How do I choose an enterprise SEO service for a large B2B software company?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo services"
+  },
+  {
+    "id": "a1b2c3d4-0003-4000-8000-000000000001",
+    "query": "What are the top enterprise SEO agencies for B2B tech companies?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0003-4000-8000-000000000002",
+    "query": "Which enterprise SEO agency is best for scaling organic traffic?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0003-4000-8000-000000000003",
+    "query": "Can you recommend an enterprise SEO agency that understands SaaS products?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0004-4000-8000-000000000001",
+    "query": "What are the best LinkedIn marketing agencies for B2B SaaS?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "linkedin marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0004-4000-8000-000000000002",
+    "query": "Which agency is best for LinkedIn lead generation for software companies?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "linkedin marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0004-4000-8000-000000000003",
+    "query": "How do LinkedIn marketing agencies help B2B companies generate pipeline?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "linkedin marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0005-4000-8000-000000000001",
+    "query": "What is the best enterprise SEO company for a mid-market B2B brand?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo company"
+  },
+  {
+    "id": "a1b2c3d4-0005-4000-8000-000000000002",
+    "query": "Which enterprise SEO companies consistently rank clients on the first page?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo company"
+  },
+  {
+    "id": "a1b2c3d4-0005-4000-8000-000000000003",
+    "query": "How do enterprise SEO companies price their services?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo company"
+  },
+  {
+    "id": "a1b2c3d4-0006-4000-8000-000000000001",
+    "query": "Who are the best SEO migration service providers for large websites?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "seo migration services"
+  },
+  {
+    "id": "a1b2c3d4-0006-4000-8000-000000000002",
+    "query": "What SEO migration services help preserve rankings during a website relaunch?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "seo migration services"
+  },
+  {
+    "id": "a1b2c3d4-0006-4000-8000-000000000003",
+    "query": "How much do professional SEO migration services cost?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "seo migration services"
+  },
+  {
+    "id": "a1b2c3d4-0007-4000-8000-000000000001",
+    "query": "What are the top enterprise SEO firms trusted by Fortune 500 companies?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo firms"
+  },
+  {
+    "id": "a1b2c3d4-0007-4000-8000-000000000002",
+    "query": "Which enterprise SEO firms offer both technical SEO and content strategy?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo firms"
+  },
+  {
+    "id": "a1b2c3d4-0007-4000-8000-000000000003",
+    "query": "How do enterprise SEO firms differ from standard SEO agencies?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo firms"
+  },
+  {
+    "id": "a1b2c3d4-0008-4000-8000-000000000001",
+    "query": "What is the best SEO software for agencies managing multiple clients?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo software for an agency"
+  },
+  {
+    "id": "a1b2c3d4-0008-4000-8000-000000000002",
+    "query": "Which SEO software platforms do agencies prefer for reporting and audits?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo software for an agency"
+  },
+  {
+    "id": "a1b2c3d4-0008-4000-8000-000000000003",
+    "query": "How do SEO agencies choose the right software stack for client management?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo software for an agency"
+  },
+  {
+    "id": "a1b2c3d4-0009-4000-8000-000000000001",
+    "query": "What is the best SaaS link building agency for tech startups?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "saas link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0009-4000-8000-000000000002",
+    "query": "Which link building agencies specialize in high-authority backlinks for SaaS?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "saas link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0009-4000-8000-000000000003",
+    "query": "How much does a SaaS link building agency charge per month?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "saas link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0010-4000-8000-000000000001",
+    "query": "What is the best enterprise SEO consultant for a B2B software company?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo consultant"
+  },
+  {
+    "id": "a1b2c3d4-0010-4000-8000-000000000002",
+    "query": "How do enterprise SEO consultants help companies fix technical debt and grow traffic?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo consultant"
+  },
+  {
+    "id": "a1b2c3d4-0010-4000-8000-000000000003",
+    "query": "What should I expect to pay an enterprise SEO consultant?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo consultant"
+  },
+  {
+    "id": "a1b2c3d4-0011-4000-8000-000000000001",
+    "query": "What are the best B2B SaaS SEO agencies in 2025?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "b2b saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0011-4000-8000-000000000002",
+    "query": "Which B2B SaaS SEO agency has the best case studies for demand gen?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "b2b saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0011-4000-8000-000000000003",
+    "query": "How is a B2B SaaS SEO agency different from a general digital marketing agency?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "b2b saas seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0012-4000-8000-000000000001",
+    "query": "What are the best SaaS SEO services for early-stage startups?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo services"
+  },
+  {
+    "id": "a1b2c3d4-0012-4000-8000-000000000002",
+    "query": "Which SaaS SEO services include both content and link building?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo services"
+  },
+  {
+    "id": "a1b2c3d4-0012-4000-8000-000000000003",
+    "query": "How do SaaS SEO services help increase demo bookings from organic search?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "saas seo services"
+  },
+  {
+    "id": "a1b2c3d4-0013-4000-8000-000000000001",
+    "query": "What is the best content optimization tool for SEO teams?",
+    "topic_bucket": "Content & On-Page",
+    "source_keyword": "content optimization tool"
+  },
+  {
+    "id": "a1b2c3d4-0013-4000-8000-000000000002",
+    "query": "Which content optimization tools are best for improving topical authority?",
+    "topic_bucket": "Content & On-Page",
+    "source_keyword": "content optimization tool"
+  },
+  {
+    "id": "a1b2c3d4-0013-4000-8000-000000000003",
+    "query": "How do content optimization tools help rank higher in AI-driven search results?",
+    "topic_bucket": "Content & On-Page",
+    "source_keyword": "content optimization tool"
+  },
+  {
+    "id": "a1b2c3d4-0014-4000-8000-000000000001",
+    "query": "What SEO enterprise software works best for large agency teams?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo enterprise software for agency"
+  },
+  {
+    "id": "a1b2c3d4-0014-4000-8000-000000000002",
+    "query": "Which enterprise SEO software platforms include white-label reporting?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo enterprise software for agency"
+  },
+  {
+    "id": "a1b2c3d4-0014-4000-8000-000000000003",
+    "query": "How does enterprise SEO software compare to standard tools like Ahrefs or Semrush?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "seo enterprise software for agency"
+  },
+  {
+    "id": "a1b2c3d4-0015-4000-8000-000000000001",
+    "query": "What are the best B2B SaaS marketing agencies in the US right now?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "b2b saas marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0015-4000-8000-000000000002",
+    "query": "Which B2B SaaS marketing agencies are best for pipeline-driven SEO and content?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "b2b saas marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0015-4000-8000-000000000003",
+    "query": "How much do B2B SaaS marketing agencies typically charge per month?",
+    "topic_bucket": "B2B Marketing",
+    "source_keyword": "b2b saas marketing agency"
+  },
+  {
+    "id": "a1b2c3d4-0016-4000-8000-000000000001",
+    "query": "Which SEO agencies specialize in working with SaaS companies?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "seo agency for saas companies"
+  },
+  {
+    "id": "a1b2c3d4-0016-4000-8000-000000000002",
+    "query": "What should I look for in an SEO agency that understands SaaS product-led growth?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "seo agency for saas companies"
+  },
+  {
+    "id": "a1b2c3d4-0016-4000-8000-000000000003",
+    "query": "What are the best SEO agencies for SaaS companies with under $10M ARR?",
+    "topic_bucket": "SaaS SEO",
+    "source_keyword": "seo agency for saas companies"
+  },
+  {
+    "id": "a1b2c3d4-0017-4000-8000-000000000001",
+    "query": "What is the best link building agency for B2B companies?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "best link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0017-4000-8000-000000000002",
+    "query": "Which link building agencies have the best reviews for white-hat link acquisition?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "best link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0017-4000-8000-000000000003",
+    "query": "How do link building agencies get high-DR backlinks for SaaS clients?",
+    "topic_bucket": "Link Building",
+    "source_keyword": "best link building agency"
+  },
+  {
+    "id": "a1b2c3d4-0018-4000-8000-000000000001",
+    "query": "What are the best enterprise SEO software platforms available today?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo software platform"
+  },
+  {
+    "id": "a1b2c3d4-0018-4000-8000-000000000002",
+    "query": "Which enterprise SEO software platforms are best for technical audits at scale?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo software platform"
+  },
+  {
+    "id": "a1b2c3d4-0018-4000-8000-000000000003",
+    "query": "How do enterprise SEO platforms compare to tools like Screaming Frog or Botify?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "enterprise seo software platform"
+  },
+  {
+    "id": "a1b2c3d4-0019-4000-8000-000000000001",
+    "query": "What is the best website migration agency for preserving SEO rankings?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "website migration agency"
+  },
+  {
+    "id": "a1b2c3d4-0019-4000-8000-000000000002",
+    "query": "Which website migration agencies specialize in technical SEO during platform moves?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "website migration agency"
+  },
+  {
+    "id": "a1b2c3d4-0019-4000-8000-000000000003",
+    "query": "How much does a website migration agency typically charge for a full replatform?",
+    "topic_bucket": "SEO Migration",
+    "source_keyword": "website migration agency"
+  },
+  {
+    "id": "a1b2c3d4-0020-4000-8000-000000000001",
+    "query": "What are the best enterprise SEO agencies for B2B technology companies?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "best enterprise seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0020-4000-8000-000000000002",
+    "query": "Which enterprise SEO agencies have the strongest results for SaaS or software brands?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "best enterprise seo agency"
+  },
+  {
+    "id": "a1b2c3d4-0020-4000-8000-000000000003",
+    "query": "How do enterprise SEO agencies approach AI search optimization in 2025?",
+    "topic_bucket": "Enterprise SEO",
+    "source_keyword": "best enterprise seo agency"
+  }
+]
