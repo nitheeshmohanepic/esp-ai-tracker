@@ -203,41 +203,24 @@ function makeEngines(detect) {
 
   async function querySerpAPI(query) {
     return limiters.serpapi.run(() => withRetry(async () => {
-      const url = `https://serpapi.com/search?engine=google&q=${encodeURIComponent(query)}&api_key=${SERPAPI_KEY}`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+      const params = new URLSearchParams({
+        engine: 'google_ai_mode',
+        q: query,
+        hl: 'en',
+        gl: 'us',
+        google_domain: 'google.com',
+        location: 'United States',
+        api_key: SERPAPI_KEY,
+      });
+      const res = await fetch(`https://serpapi.com/search?${params}`, { signal: AbortSignal.timeout(30000) });
       if (res.status === 429) { const err = new Error('SerpAPI 429'); err.retryAfterMs = 60000; throw err; }
       if (!res.ok) throw new Error(`SerpAPI HTTP ${res.status}`);
       const data = await res.json();
 
-      let aioText = '';
-      if (data.ai_overview) {
-        // Follow page_token link to get actual text content
-        const serpLink = data.ai_overview.serpapi_link;
-        if (serpLink) {
-          try {
-            const aioRes = await fetch(serpLink + `&api_key=${SERPAPI_KEY}`, { signal: AbortSignal.timeout(20000) });
-            if (aioRes.ok) {
-              const aioData = await aioRes.json();
-              // Extract text from blocks array
-              const blocks = aioData.ai_overview?.blocks || aioData.blocks || [];
-              const textParts = blocks
-                .map(b => b.snippet || b.text || (b.list?.items || []).map(i => i.snippet || i.text || '').join(' '))
-                .filter(Boolean);
-              aioText = textParts.join('\n');
-              // Fallback: top-level text field
-              if (!aioText) aioText = aioData.ai_overview?.text || aioData.text || '';
-            }
-          } catch (e) {
-            // page_token fetch failed — leave aioText empty
-          }
-        }
-        // Fallback if no serpapi_link or fetch failed: try inline text/blocks
-        if (!aioText) {
-          const blocks = data.ai_overview.blocks || [];
-          aioText = blocks.map(b => b.snippet || b.text || '').filter(Boolean).join('\n')
-            || data.ai_overview.text || '';
-        }
-      }
+      // text_blocks is the AI Mode response, reconstructed_markdown is the full text
+      const blocks = data.text_blocks || [];
+      const aioText = data.reconstructed_markdown ||
+        blocks.map(b => b.snippet || (b.list?.list || []).map(i => i.snippet || '').join('\n')).filter(Boolean).join('\n');
 
       const comps = detectCompetitors(aioText);
       return {

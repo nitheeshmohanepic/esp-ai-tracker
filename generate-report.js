@@ -32,7 +32,7 @@ const companyName = client.company_name || DOMAIN;
 const ENGINE_KEYS   = ['openai', 'serpapi_aio', 'claude', 'gemini'];
 const ENGINE_LABELS = {
   openai:      'OpenAI (gpt-4o)',
-  serpapi_aio: 'Google AI Overview',
+  serpapi_aio: 'Google AI Mode',
   claude:      'Claude (Haiku 4.5)',
   gemini:      'Gemini (3.5 Flash)',
 };
