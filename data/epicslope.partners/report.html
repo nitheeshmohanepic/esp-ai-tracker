@@ -1,0 +1,221 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'Helvetica Neue',Arial,sans-serif; font-size:13px; color:#1a1a1a; background:#fff; padding:44px 52px; max-width:860px; margin:0 auto; }
+
+.report-header { margin-bottom:32px; border-bottom:3px solid #e8304a; padding-bottom:18px; }
+.report-header h1 { font-size:24px; font-weight:800; color:#111; }
+.report-header .meta { font-size:11.5px; color:#666; margin-top:5px; }
+.domain-pill { display:inline-block; background:#f3f4f6; border-radius:4px; padding:2px 10px; font-size:11.5px; color:#444; font-weight:600; margin-top:7px; }
+
+.overall-score { display:flex; align-items:center; gap:20px; background:#111; color:#fff; border-radius:8px; padding:18px 26px; margin-bottom:32px; }
+.score-number { font-size:50px; font-weight:800; color:#e8304a; line-height:1; }
+.score-label { font-size:14px; font-weight:700; }
+.score-sub { font-size:11px; color:#aaa; margin-top:3px; }
+
+.section { margin-bottom:32px; }
+.section-title { font-size:12px; font-weight:700; color:#fff; background:#1a1a1a; padding:7px 14px; border-radius:4px 4px 0 0; text-transform:uppercase; letter-spacing:0.05em; }
+.section-subtitle { font-size:11px; color:#888; margin:5px 0 10px; padding:0 2px; font-style:italic; }
+
+table { width:100%; border-collapse:collapse; }
+tr { border-bottom:1px solid #f0f0f0; }
+tr:last-child { border-bottom:none; }
+td { padding:9px 14px; vertical-align:middle; }
+.col-label { width:42%; font-size:12.5px; color:#333; font-weight:500; }
+.col-bar { width:58%; }
+.table-wrap { border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; overflow:hidden; }
+tr:nth-child(even) { background:#fafafa; }
+
+.bar-wrap { display:flex; align-items:center; gap:10px; }
+.bar { height:18px; border-radius:3px; min-width:2px; }
+.bar-label { font-size:12px; font-weight:700; color:#555; white-space:nowrap; }
+
+.err-note { font-size:10.5px; color:#aaa; font-weight:400; }
+
+.engine-row { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.engine-tag { font-size:10px; background:#f0f0f0; color:#555; padding:1px 6px; border-radius:3px; white-space:nowrap; }
+
+.badge { display:inline-block; color:#fff; font-size:11px; font-weight:700; padding:2px 7px; border-radius:3px; min-width:36px; text-align:center; margin-right:8px; flex-shrink:0; }
+.weak-list { list-style:none; padding:10px 14px; border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; }
+.weak-list li { display:flex; align-items:center; padding:5px 0; border-bottom:1px solid #f5f5f5; flex-wrap:wrap; gap:4px; }
+.weak-list li:last-child { border-bottom:none; }
+.weak-query { font-size:12px; color:#333; flex:1; }
+.weak-bucket { font-size:10px; background:#f0f0f0; color:#777; padding:1px 7px; border-radius:3px; white-space:nowrap; }
+
+.actions-wrap { border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; overflow:hidden; }
+.action-item { padding:13px 18px; border-bottom:1px solid #f0f0f0; }
+.action-item:last-child { border-bottom:none; }
+.action-header { display:flex; align-items:baseline; gap:10px; margin-bottom:5px; }
+.action-num { font-size:11px; font-weight:800; color:#e8304a; min-width:24px; }
+.action-title { font-size:13px; font-weight:700; color:#111; }
+.action-body { font-size:11.5px; color:#555; line-height:1.65; padding-left:34px; }
+
+.footer { margin-top:36px; padding-top:14px; border-top:1px solid #eee; font-size:11px; color:#aaa; display:flex; justify-content:space-between; }
+.footer strong { color:#e8304a; }
+</style></head><body>
+
+<div class="report-header">
+  <h1>AI Visibility Report</h1>
+  <div class="meta">Scan date: June 11, 2026 &nbsp;·&nbsp; 60 prompts &nbsp;·&nbsp; 4 engines</div>
+  <div class="domain-pill">epicslope.partners</div>
+</div>
+
+<div class="overall-score">
+  <div class="score-number">7%</div>
+  <div>
+    <div class="score-label">Overall AI Visibility</div>
+    <div class="score-sub">% of prompts with at least one brand mention across all engines</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Visibility by AI Engine</div>
+  <div class="section-subtitle">% of valid (non-error) prompts where "Epic Slope" or "epicslope.partners" appeared</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">OpenAI (gpt-4o)</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Google AI Overview</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Claude (Haiku 4.5)</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Gemini (3.5 Flash)<span class="err-note"> · 9 timeouts</span></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:8%;background:#e8304a"></div><span class="bar-label">8%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Visibility by Service</div>
+  <div class="section-subtitle">Brand mention rate per ESP service line, combined across all engines — with per-engine breakdown</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">SEO Migration<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 50%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:13%;background:#e8304a"></div><span class="bar-label">13%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Enterprise SEO<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 5%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">1%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">SaaS SEO<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">B2B Marketing<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Link Building<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Content & On-Page<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Weak &amp; Missing Prompts</div>
+  <div class="section-subtitle">Queries where brand_mentioned = false across ALL 4 engines — highest-priority content gaps (top 20 shown)</div>
+  <ul class="weak-list">
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is the best SaaS SEO agency for B2B companies?"</span> <span class="weak-bucket">SaaS SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which agencies specialize in SEO for SaaS businesses?"</span> <span class="weak-bucket">SaaS SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Who are the top-rated SaaS SEO agencies I should consider hiring?"</span> <span class="weak-bucket">SaaS SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What are the best enterprise SEO services available right now?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which enterprise SEO service providers have the best track record?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do I choose an enterprise SEO service for a large B2B software company?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What are the top enterprise SEO agencies for B2B tech companies?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which enterprise SEO agency is best for scaling organic traffic?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Can you recommend an enterprise SEO agency that understands SaaS products?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What are the best LinkedIn marketing agencies for B2B SaaS?"</span> <span class="weak-bucket">B2B Marketing</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which agency is best for LinkedIn lead generation for software companies?"</span> <span class="weak-bucket">B2B Marketing</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do LinkedIn marketing agencies help B2B companies generate pipeline?"</span> <span class="weak-bucket">B2B Marketing</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is the best enterprise SEO company for a mid-market B2B brand?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which enterprise SEO companies consistently rank clients on the first page?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do enterprise SEO companies price their services?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What SEO migration services help preserve rankings during a website relaunch?"</span> <span class="weak-bucket">SEO Migration</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How much do professional SEO migration services cost?"</span> <span class="weak-bucket">SEO Migration</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What are the top enterprise SEO firms trusted by Fortune 500 companies?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do enterprise SEO firms differ from standard SEO agencies?"</span> <span class="weak-bucket">Enterprise SEO</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is the best SEO software for agencies managing multiple clients?"</span> <span class="weak-bucket">Enterprise SEO</span></li></ul>
+</div>
+
+<div class="section">
+  <div class="section-title">Competitor Comparison</div>
+  <div class="section-subtitle">Competing domains appearing in AI responses — % of total prompt×engine pairs where they were cited</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">firstpagesage.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:4%;background:#444"></div><span class="bar-label">4%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">directiveconsulting.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:3%;background:#444"></div><span class="bar-label">3%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">siegemedia.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:3%;background:#444"></div><span class="bar-label">3%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">madx.digital</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:2%;background:#444"></div><span class="bar-label">2%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">kalungi.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">omniscientdigital.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">poweredbysearch.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">b2bseo.io</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Action Items</div>
+  <div class="section-subtitle">Prioritised by expected impact — referencing specific service gaps and query patterns from this scan</div>
+  <div class="actions-wrap">
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">01</span><span class="action-title">Double down on SEO Migration — only service with any AI visibility</span></div>
+    <p class="action-body">Gemini 3.5 Flash mentioned Epic Slope on 13% of SEO Migration prompts — the only positive signal across all services. This means some content or citation exists but isn't strong enough to surface consistently. Build 2–3 dedicated migration case study pages (with before/after traffic data) and a "SEO migration checklist" resource. This is the fastest path to increasing visibility from 13% toward 40%+.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">02</span><span class="action-title">Create "best of" comparison pages for SaaS SEO and Enterprise SEO</span></div>
+    <p class="action-body">SaaS SEO (12 prompts, 0%) and Enterprise SEO (27 prompts, 0–1%) are the two highest-volume service categories and are completely invisible. First Page Sage appeared in 10 responses; Directive in 8. Both are cited in roundup articles. Publishing a "Top B2B SaaS SEO Agencies" buyer's guide (with Epic Slope listed and reviewed) directly targets the prompt type AI engines pull from most.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">03</span><span class="action-title">Get listed in 5+ agency directories and roundup articles</span></div>
+    <p class="action-body">First Page Sage (10 mentions), Directive Consulting (8), and Siege Media (7) all appear because they are cited in high-authority roundup articles and directories that AI engines index as reference sources. Submit Epic Slope to G2, Clutch, DesignRush, and at least 3 editorial "best SaaS SEO agency" listicles. These citations feed directly into Gemini and OpenAI retrieval.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">04</span><span class="action-title">Publish a pricing transparency page for each service line</span></div>
+    <p class="action-body">Pricing prompts scored 0% across all 4 engines. A dedicated pricing page (or "how B2B SaaS SEO is priced" explainer) signals credibility and gives AI engines a structured, citable page. Competitors without pricing pages are consistently skipped when a pricing-aware source exists. Target the exact query phrasing from the weak prompts list: "how much does a SaaS link building agency charge" and "what should I expect to pay an enterprise SEO consultant".</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">05</span><span class="action-title">Build Link Building and B2B Marketing service pages targeting buyer questions</span></div>
+    <p class="action-body">Link Building and B2B Marketing both scored 0% across all engines. Create dedicated landing pages that directly answer the natural-language questions from the weak prompts — structured with H2s matching exact query phrasing, a FAQ section, and at least one client result. Google AI Overview in particular pulls heavily from on-page FAQ schema markup.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">06</span><span class="action-title">Increase co-citation signals: LinkedIn + guest posts + podcast mentions</span></div>
+    <p class="action-body">AI engines build brand associations through co-citation — if "Epic Slope" consistently appears alongside "B2B SaaS SEO", "SaaS link building", and "SEO migration" across multiple domains, the brand enters retrieval context. Target 2 LinkedIn thought-leadership posts per week, 1 guest article per month on a DR 50+ SEO blog, and at least 2 podcast appearances on B2B marketing shows this quarter.</p>
+  </div></div>
+</div>
+
+<div class="footer">
+  <span>Generated by <strong>ESP AI Tracker</strong> &nbsp;·&nbsp; epicslope.partners</span>
+  <span>June 11, 2026</span>
+</div>
+
+</body></html>

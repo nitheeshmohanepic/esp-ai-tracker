@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["nodejs_22", "chromium", "nss", "xorg.libX11", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXrandr", "xorg.libxcb", "xorg.libXext", "xorg.libXfixes", "xorg.libXi", "xorg.libXrender", "xorg.libXtst", "libdrm", "mesa", "expat", "libxkbcommon", "at-spi2-atk", "at-spi2-core", "dbus", "cups", "alsa-lib", "pango", "cairo", "gdk-pixbuf", "gtk3", "glib"]
+
+[start]
+cmd = "node server.js"

@@ -1,0 +1,233 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'Helvetica Neue',Arial,sans-serif; font-size:13px; color:#1a1a1a; background:#fff; padding:44px 52px; max-width:860px; margin:0 auto; }
+
+.report-header { margin-bottom:32px; border-bottom:3px solid #e8304a; padding-bottom:18px; }
+.report-header h1 { font-size:24px; font-weight:800; color:#111; }
+.report-header .meta { font-size:11.5px; color:#666; margin-top:5px; }
+.domain-pill { display:inline-block; background:#f3f4f6; border-radius:4px; padding:2px 10px; font-size:11.5px; color:#444; font-weight:600; margin-top:7px; }
+
+.overall-score { display:flex; align-items:center; gap:20px; background:#111; color:#fff; border-radius:8px; padding:18px 26px; margin-bottom:32px; }
+.score-number { font-size:50px; font-weight:800; color:#e8304a; line-height:1; }
+.score-label { font-size:14px; font-weight:700; }
+.score-sub { font-size:11px; color:#aaa; margin-top:3px; }
+
+.section { margin-bottom:32px; }
+.section-title { font-size:12px; font-weight:700; color:#fff; background:#1a1a1a; padding:7px 14px; border-radius:4px 4px 0 0; text-transform:uppercase; letter-spacing:0.05em; }
+.section-subtitle { font-size:11px; color:#888; margin:5px 0 10px; padding:0 2px; font-style:italic; }
+
+table { width:100%; border-collapse:collapse; }
+tr { border-bottom:1px solid #f0f0f0; }
+tr:last-child { border-bottom:none; }
+td { padding:9px 14px; vertical-align:middle; }
+.col-label { width:42%; font-size:12.5px; color:#333; font-weight:500; }
+.col-bar { width:58%; }
+.table-wrap { border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; overflow:hidden; }
+tr:nth-child(even) { background:#fafafa; }
+
+.bar-wrap { display:flex; align-items:center; gap:10px; }
+.bar { height:18px; border-radius:3px; min-width:2px; }
+.bar-label { font-size:12px; font-weight:700; color:#555; white-space:nowrap; }
+
+.err-note { font-size:10.5px; color:#aaa; font-weight:400; }
+
+.engine-row { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.engine-tag { font-size:10px; background:#f0f0f0; color:#555; padding:1px 6px; border-radius:3px; white-space:nowrap; }
+
+.badge { display:inline-block; color:#fff; font-size:11px; font-weight:700; padding:2px 7px; border-radius:3px; min-width:36px; text-align:center; margin-right:8px; flex-shrink:0; }
+.weak-list { list-style:none; padding:10px 14px; border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; }
+.weak-list li { display:flex; align-items:center; padding:5px 0; border-bottom:1px solid #f5f5f5; flex-wrap:wrap; gap:4px; }
+.weak-list li:last-child { border-bottom:none; }
+.weak-query { font-size:12px; color:#333; flex:1; }
+.weak-bucket { font-size:10px; background:#f0f0f0; color:#777; padding:1px 7px; border-radius:3px; white-space:nowrap; }
+
+.actions-wrap { border:1px solid #e5e5e5; border-top:none; border-radius:0 0 4px 4px; overflow:hidden; }
+.action-item { padding:13px 18px; border-bottom:1px solid #f0f0f0; }
+.action-item:last-child { border-bottom:none; }
+.action-header { display:flex; align-items:baseline; gap:10px; margin-bottom:5px; }
+.action-num { font-size:11px; font-weight:800; color:#e8304a; min-width:24px; }
+.action-title { font-size:13px; font-weight:700; color:#111; }
+.action-body { font-size:11.5px; color:#555; line-height:1.65; padding-left:34px; }
+
+.footer { margin-top:36px; padding-top:14px; border-top:1px solid #eee; font-size:11px; color:#aaa; display:flex; justify-content:space-between; }
+.footer strong { color:#e8304a; }
+</style></head><body>
+
+<div class="report-header">
+  <h1>Singulr AI — AI Visibility Report</h1>
+  <div class="meta">Scan date: June 11, 2026 &nbsp;·&nbsp; 50 prompts &nbsp;·&nbsp; 4 engines</div>
+  <div class="domain-pill">singulr.ai</div>
+</div>
+
+<div class="overall-score">
+  <div class="score-number">0%</div>
+  <div>
+    <div class="score-label">Overall AI Visibility</div>
+    <div class="score-sub">% of prompts with at least one brand mention across all engines</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Visibility by AI Engine</div>
+  <div class="section-subtitle">% of valid (non-error) prompts where "Epic Slope" or "epicslope.partners" appeared</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">OpenAI (gpt-4o)</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Google AI Overview</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Claude (Haiku 4.5)</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Gemini (3.5 Flash)</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Visibility by Service</div>
+  <div class="section-subtitle">Brand mention rate per ESP service line, combined across all engines — with per-engine breakdown</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">AI Governance<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">AI Risk & Compliance<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">AI Security<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">AI Agent Management<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">CIO & IT Operations<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Responsible AI<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Industry — Financial Services<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Industry — Healthcare<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">Industry — Technology<div class="engine-row"><span class="engine-tag">OpenAI: 0%</span><span class="engine-tag">Google: 0%</span><span class="engine-tag">Claude: 0%</span><span class="engine-tag">Gemini: 0%</span></div></td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#e8304a"></div><span class="bar-label">0%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Weak &amp; Missing Prompts</div>
+  <div class="section-subtitle">Queries where brand_mentioned = false across ALL 4 engines — highest-priority content gaps (top 20 shown)</div>
+  <ul class="weak-list">
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is the best enterprise AI governance platform available right now?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do enterprises govern AI usage across their organization in 2026?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What tools do CISOs use to govern AI models and agents in the enterprise?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which companies offer unified AI governance and control for large enterprises?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is an AI control plane and which vendors provide one?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do I implement AI governance policy enforcement across cloud and SaaS?"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Best platforms for enterprise AI policy management and enforcement in the US"</span> <span class="weak-bucket">AI Governance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is the best AI risk management platform for enterprises?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do companies manage AI compliance with EU AI Act and other regulations?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What tools help enterprises comply with AI regulations in 2026?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do I produce audit-ready evidence of AI compliance for regulators?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which AI governance platforms support EU AI Act compliance?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Best AI risk and compliance management solutions for financial services"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do healthcare enterprises manage AI compliance and HIPAA risk?"</span> <span class="weak-bucket">AI Risk & Compliance</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What is shadow AI and how do enterprises detect and control it?"</span> <span class="weak-bucket">AI Security</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do I prevent prompt injection attacks in enterprise AI systems?"</span> <span class="weak-bucket">AI Security</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"What are the best AI security platforms to protect enterprise LLM deployments?"</span> <span class="weak-bucket">AI Security</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do enterprises prevent PII and PHI leakage through AI tools?"</span> <span class="weak-bucket">AI Security</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"Which vendors offer runtime AI security and enforcement for enterprise teams?"</span> <span class="weak-bucket">AI Security</span></li>
+  <li><span class="badge" style="background:#e8304a">0%</span> <span class="weak-query">"How do you discover and inventory all AI usage across an enterprise?"</span> <span class="weak-bucket">AI Security</span></li></ul>
+</div>
+
+<div class="section">
+  <div class="section-title">Competitor Comparison</div>
+  <div class="section-subtitle">Competing domains appearing in AI responses — % of total prompt×engine pairs where they were cited</div>
+  <div class="table-wrap"><table>
+  <tr>
+    <td class="col-label">protectai.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">lakera.ai</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">hiddenlayer.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">calypsoai.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">securiti.ai</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">cranium.ai</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">robustintelligence.com</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr>
+  <tr>
+    <td class="col-label">credo.ai</td>
+    <td class="col-bar"><div class="bar-wrap"><div class="bar" style="width:1%;background:#444"></div><span class="bar-label">0%</span></div></td>
+  </tr></table></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Action Items</div>
+  <div class="section-subtitle">Prioritised by expected impact — referencing specific service gaps and query patterns from this scan</div>
+  <div class="actions-wrap">
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">01</span><span class="action-title">Establish a baseline: publish foundational content for each service area</span></div>
+    <p class="action-body">Singulr AI scored 0% across all categories — AI engines have no training signal yet. The fastest fix is to publish one authoritative, structured page per service area that directly answers the natural-language questions in the prompt list. Use H2 headings that match query phrasing, add FAQ schema markup, and include at least one concrete result or case study per page.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">02</span><span class="action-title">Create targeted content for AI Governance and AI Risk & Compliance</span></div>
+    <p class="action-body">AI Governance and AI Risk & Compliance scored 0% across all engines — AI engines have no citable source for these topics. Build dedicated landing pages structured around the exact buyer questions from the weak prompts list. Include H2s matching query phrasing, an FAQ section with schema markup, and at least one client result. Google AI Overview pulls heavily from on-page FAQ schema; Claude and Gemini favour well-structured long-form pages.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">03</span><span class="action-title">Build third-party citation presence to enter AI retrieval</span></div>
+    <p class="action-body">Neither Singulr AI nor its competitors appeared in AI responses — this category is unclaimed territory. Get listed first: submit to G2, Gartner Peer Insights, Capterra, and at least 3 editorial roundup articles. AI engines pull heavily from authoritative third-party sources. Being the first brand cited in a category-level roundup article gives a significant first-mover advantage in AI visibility.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">04</span><span class="action-title">Publish comparison and "best of" pages targeting high-intent buyer queries</span></div>
+    <p class="action-body">Prompts like "What is the best enterprise AI governance platform available right now?"; "How do enterprises govern AI usage across their organization in 2026?"; "What tools do CISOs use to govern AI models and agents in the enterprise?" scored 0% on all engines. These are high-intent buyer queries that AI engines answer from comparison articles and buyer guides. Publishing a "Singulr AI vs [competitor]" page and a "Top [category] platforms" guide where Singulr AI is featured and reviewed directly targets these query types. Structured comparison tables with pros/cons are especially well-cited by Claude and OpenAI.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">05</span><span class="action-title">Add FAQ schema markup to all service pages to capture Google AI Overviews</span></div>
+    <p class="action-body">Google AI Overview (via SerpAPI) returned encoded tokens rather than brand mentions — this indicates AI Overviews aren't triggering for your query types yet. Adding FAQ schema markup (JSON-LD) to each service page directly increases the chance of appearing in AI Overview responses. Target question-format H2s that match the exact prompt phrasing, and ensure each page has a clear entity declaration (company name, category, location) in structured data.</p>
+  </div>
+  <div class="action-item">
+    <div class="action-header"><span class="action-num">06</span><span class="action-title">Build co-citation signals: thought leadership + press + podcast mentions</span></div>
+    <p class="action-body">AI engines build brand associations through co-citation — Singulr AI needs to consistently appear alongside its core category keywords across multiple domains. Target: 2 LinkedIn thought-leadership posts per week on category topics, 1 guest article per month on a DR 50+ industry publication, and at least 2 podcast appearances on relevant shows this quarter. Each co-citation strengthens the brand's topical authority signal in AI training and retrieval.</p>
+  </div></div>
+</div>
+
+<div class="footer">
+  <span>Generated by <strong>ESP AI Tracker</strong> &nbsp;·&nbsp; singulr.ai</span>
+  <span>June 11, 2026</span>
+</div>
+
+</body></html>

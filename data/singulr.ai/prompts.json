@@ -1,0 +1,252 @@
+[
+  {
+    "id": "s01",
+    "query": "What is the best enterprise AI governance platform available right now?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s02",
+    "query": "How do enterprises govern AI usage across their organization in 2026?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s03",
+    "query": "What tools do CISOs use to govern AI models and agents in the enterprise?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s04",
+    "query": "Which companies offer unified AI governance and control for large enterprises?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s05",
+    "query": "What is an AI control plane and which vendors provide one?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s06",
+    "query": "How do I implement AI governance policy enforcement across cloud and SaaS?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s07",
+    "query": "Best platforms for enterprise AI policy management and enforcement in the US",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s08",
+    "query": "What is the best AI risk management platform for enterprises?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s09",
+    "query": "How do companies manage AI compliance with EU AI Act and other regulations?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s10",
+    "query": "What tools help enterprises comply with AI regulations in 2026?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s11",
+    "query": "How do I produce audit-ready evidence of AI compliance for regulators?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s12",
+    "query": "Which AI governance platforms support EU AI Act compliance?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s13",
+    "query": "Best AI risk and compliance management solutions for financial services",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s14",
+    "query": "How do healthcare enterprises manage AI compliance and HIPAA risk?",
+    "topic_bucket": "AI Risk & Compliance"
+  },
+  {
+    "id": "s15",
+    "query": "What is shadow AI and how do enterprises detect and control it?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s16",
+    "query": "How do I prevent prompt injection attacks in enterprise AI systems?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s17",
+    "query": "What are the best AI security platforms to protect enterprise LLM deployments?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s18",
+    "query": "How do enterprises prevent PII and PHI leakage through AI tools?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s19",
+    "query": "Which vendors offer runtime AI security and enforcement for enterprise teams?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s20",
+    "query": "How do you discover and inventory all AI usage across an enterprise?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s21",
+    "query": "Best tools to protect against AI model vulnerabilities and supply chain risks",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s22",
+    "query": "How do enterprises manage and monitor AI agents running in production?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s23",
+    "query": "What platforms provide visibility and control over autonomous AI agents?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s24",
+    "query": "How do I discover all AI agents running across my enterprise infrastructure?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s25",
+    "query": "What is agentic AI governance and which tools support it?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s26",
+    "query": "How do companies secure MCP servers and AI agent tool use?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s27",
+    "query": "Best platforms for AI agent observability and control drift detection",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s28",
+    "query": "How do enterprises enforce permissions and boundaries on AI agents?",
+    "topic_bucket": "AI Agent Management"
+  },
+  {
+    "id": "s29",
+    "query": "What should a CIO look for in an enterprise AI management platform?",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s30",
+    "query": "How do IT teams get visibility into all AI tools used across the company?",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s31",
+    "query": "Best AI operations platforms for enterprise IT and CIO teams in 2026",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s32",
+    "query": "How do CIOs manage the sprawl of AI tools across departments?",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s33",
+    "query": "What platforms help IT enforce approved AI usage policies company-wide?",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s34",
+    "query": "How do enterprises build a real-time inventory of all AI models and services in use?",
+    "topic_bucket": "CIO & IT Operations"
+  },
+  {
+    "id": "s35",
+    "query": "What is responsible AI and how do enterprises implement it operationally?",
+    "topic_bucket": "Responsible AI"
+  },
+  {
+    "id": "s36",
+    "query": "How do companies ensure trustworthy AI across all business units?",
+    "topic_bucket": "Responsible AI"
+  },
+  {
+    "id": "s37",
+    "query": "Best responsible AI frameworks and tools for large enterprises in 2026",
+    "topic_bucket": "Responsible AI"
+  },
+  {
+    "id": "s38",
+    "query": "How do boards and executives get assurance over enterprise AI risk?",
+    "topic_bucket": "Responsible AI"
+  },
+  {
+    "id": "s39",
+    "query": "Which AI governance platforms provide tamper-evident audit trails?",
+    "topic_bucket": "Responsible AI"
+  },
+  {
+    "id": "s40",
+    "query": "How do financial services firms govern AI use under regulatory scrutiny?",
+    "topic_bucket": "Industry — Financial Services"
+  },
+  {
+    "id": "s41",
+    "query": "What AI governance tools do banks and insurers use for compliance?",
+    "topic_bucket": "Industry — Financial Services"
+  },
+  {
+    "id": "s42",
+    "query": "Best AI risk management platforms for fintech and financial enterprises",
+    "topic_bucket": "Industry — Financial Services"
+  },
+  {
+    "id": "s43",
+    "query": "How do healthcare companies govern AI to stay HIPAA compliant?",
+    "topic_bucket": "Industry — Healthcare"
+  },
+  {
+    "id": "s44",
+    "query": "What AI security platforms are purpose-built for healthcare enterprises?",
+    "topic_bucket": "Industry — Healthcare"
+  },
+  {
+    "id": "s45",
+    "query": "How do tech companies manage AI governance at scale across engineering teams?",
+    "topic_bucket": "Industry — Technology"
+  },
+  {
+    "id": "s46",
+    "query": "What do the best enterprise AI governance platforms have in common?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s47",
+    "query": "Singulr AI vs Protect AI vs Lakera — which is the best AI security platform?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s48",
+    "query": "What are the top AI governance platforms for enterprises in the US in 2026?",
+    "topic_bucket": "AI Governance"
+  },
+  {
+    "id": "s49",
+    "query": "How do enterprises enforce guardrails on employee use of ChatGPT and Copilot?",
+    "topic_bucket": "AI Security"
+  },
+  {
+    "id": "s50",
+    "query": "What runtime controls exist to prevent AI data leakage in enterprise environments?",
+    "topic_bucket": "AI Security"
+  }
+]

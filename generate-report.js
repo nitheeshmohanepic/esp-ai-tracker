@@ -6,13 +6,27 @@ import puppeteer from 'puppeteer-core';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// ── Exported function ─────────────────────────────────────────────────────
+export async function generateReport(domain) {
+  return _generate(domain);
+}
+
+// ── CLI entry point ───────────────────────────────────────────────────────
 const domainArg = process.argv.indexOf('--domain');
-const DOMAIN    = domainArg !== -1 ? process.argv[domainArg + 1] : 'epicslope.partners';
+const DOMAIN    = domainArg !== -1 ? process.argv[domainArg + 1] : null;
+if (DOMAIN) _generate(DOMAIN).catch(err => { console.error(err); process.exit(1); });
+
+async function _generate(DOMAIN) {
 const scanPath  = path.join(__dirname, 'data', DOMAIN, 'latest_scan.json');
 const outputPath = path.join(__dirname, 'data', DOMAIN, 'visibility_report.pdf');
 
 const scan    = JSON.parse(fs.readFileSync(scanPath, 'utf8'));
 const results = scan.results;
+
+// ── Client config (competitors, brand name) ───────────────────────────────
+const clientPath = path.join(__dirname, 'data', DOMAIN, 'client.json');
+const client = fs.existsSync(clientPath) ? JSON.parse(fs.readFileSync(clientPath, 'utf8')) : {};
+const companyName = client.company_name || DOMAIN;
 
 // ── Engine config ─────────────────────────────────────────────────────────
 const ENGINE_KEYS   = ['openai', 'serpapi_aio', 'claude', 'gemini'];
@@ -65,9 +79,9 @@ for (const p of results) {
     for (const c of (e?.competitors_mentioned || [])) competitorCount[c] = (competitorCount[c] || 0) + 1;
   }
 }
-// Ensure known competitors show even at 0
-const knownCompetitors = ['omniscientdigital.com','poweredbysearch.com','directiveconsulting.com','madx.digital','b2bseo.io','siegemedia.com','firstpagesage.com'];
-for (const c of knownCompetitors) if (!competitorCount[c]) competitorCount[c] = 0;
+// Ensure known competitors show even at 0 (from client.json)
+const knownCompetitors = client.competitor_domains || [];
+for (const c of knownCompetitors) if (competitorCount[c] === undefined) competitorCount[c] = 0;
 const compRows = Object.entries(competitorCount).sort((a, b) => b[1] - a[1]).slice(0, 8)
   .map(([domain, count]) => ({ domain, pct: pct(count, results.length * ENGINE_KEYS.length) }));
 
@@ -77,39 +91,84 @@ const overallPct   = pct(overallHits, results.length);
 const scanDate     = new Date(scan.scan_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const totalEngines = ENGINE_KEYS.length;
 
-// ── Action items ─────────────────────────────────────────────────────────
-const actions = [
-  {
-    n: '01',
-    title: 'Double down on SEO Migration — only service with any AI visibility',
-    body: 'Gemini 3.5 Flash mentioned Epic Slope on 13% of SEO Migration prompts — the only positive signal across all services. This means some content or citation exists but isn\'t strong enough to surface consistently. Build 2–3 dedicated migration case study pages (with before/after traffic data) and a "SEO migration checklist" resource. This is the fastest path to increasing visibility from 13% toward 40%+.',
-  },
-  {
-    n: '02',
-    title: 'Create "best of" comparison pages for SaaS SEO and Enterprise SEO',
-    body: 'SaaS SEO (12 prompts, 0%) and Enterprise SEO (27 prompts, 0–1%) are the two highest-volume service categories and are completely invisible. First Page Sage appeared in 10 responses; Directive in 8. Both are cited in roundup articles. Publishing a "Top B2B SaaS SEO Agencies" buyer\'s guide (with Epic Slope listed and reviewed) directly targets the prompt type AI engines pull from most.',
-  },
-  {
-    n: '03',
-    title: 'Get listed in 5+ agency directories and roundup articles',
-    body: 'First Page Sage (10 mentions), Directive Consulting (8), and Siege Media (7) all appear because they are cited in high-authority roundup articles and directories that AI engines index as reference sources. Submit Epic Slope to G2, Clutch, DesignRush, and at least 3 editorial "best SaaS SEO agency" listicles. These citations feed directly into Gemini and OpenAI retrieval.',
-  },
-  {
-    n: '04',
-    title: 'Publish a pricing transparency page for each service line',
-    body: 'Pricing prompts scored 0% across all 4 engines. A dedicated pricing page (or "how B2B SaaS SEO is priced" explainer) signals credibility and gives AI engines a structured, citable page. Competitors without pricing pages are consistently skipped when a pricing-aware source exists. Target the exact query phrasing from the weak prompts list: "how much does a SaaS link building agency charge" and "what should I expect to pay an enterprise SEO consultant".',
-  },
-  {
-    n: '05',
-    title: 'Build Link Building and B2B Marketing service pages targeting buyer questions',
-    body: 'Link Building and B2B Marketing both scored 0% across all engines. Create dedicated landing pages that directly answer the natural-language questions from the weak prompts — structured with H2s matching exact query phrasing, a FAQ section, and at least one client result. Google AI Overview in particular pulls heavily from on-page FAQ schema markup.',
-  },
-  {
-    n: '06',
-    title: 'Increase co-citation signals: LinkedIn + guest posts + podcast mentions',
-    body: 'AI engines build brand associations through co-citation — if "Epic Slope" consistently appears alongside "B2B SaaS SEO", "SaaS link building", and "SEO migration" across multiple domains, the brand enters retrieval context. Target 2 LinkedIn thought-leadership posts per week, 1 guest article per month on a DR 50+ SEO blog, and at least 2 podcast appearances on B2B marketing shows this quarter.',
-  },
-];
+// ── Action items — generated dynamically from scan results ───────────────
+function generateActions(topicRows, compRows, overallPct, companyName, weakPrompts) {
+  const actions = [];
+  const n = i => String(i).padStart(2, '0');
+
+  // Find best and worst buckets
+  const withData = topicRows.filter(t => t.total > 0);
+  const bestBucket = withData.find(t => t.pct > 0);
+  const worstBuckets = [...withData].sort((a, b) => a.pct - b.pct).slice(0, 2);
+  const topCompetitors = compRows.filter(c => c.pct > 0).slice(0, 3);
+
+  // 01 — Best bucket to double down on (or establish baseline if all 0)
+  if (bestBucket) {
+    actions.push({
+      n: n(1),
+      title: `Double down on ${bestBucket.topic} — your strongest AI visibility signal`,
+      body: `${companyName} scored ${bestBucket.pct}% on ${bestBucket.topic} prompts — the highest across all categories. This means AI engines have some training signal for this area. Strengthen it with 2–3 dedicated case study or resource pages directly answering the exact prompts in this bucket. Increasing from ${bestBucket.pct}% toward 40%+ here is the fastest path to measurable GEO progress.`,
+    });
+  } else {
+    actions.push({
+      n: n(1),
+      title: `Establish a baseline: publish foundational content for each service area`,
+      body: `${companyName} scored 0% across all categories — AI engines have no training signal yet. The fastest fix is to publish one authoritative, structured page per service area that directly answers the natural-language questions in the prompt list. Use H2 headings that match query phrasing, add FAQ schema markup, and include at least one concrete result or case study per page.`,
+    });
+  }
+
+  // 02 — Weakest buckets
+  if (worstBuckets.length > 0) {
+    const names = worstBuckets.map(b => b.topic).join(' and ');
+    actions.push({
+      n: n(2),
+      title: `Create targeted content for ${names}`,
+      body: `${names} scored 0% across all engines — AI engines have no citable source for these topics. Build dedicated landing pages structured around the exact buyer questions from the weak prompts list. Include H2s matching query phrasing, an FAQ section with schema markup, and at least one client result. Google AI Overview pulls heavily from on-page FAQ schema; Claude and Gemini favour well-structured long-form pages.`,
+    });
+  }
+
+  // 03 — Competitor gap
+  if (topCompetitors.length > 0) {
+    const compList = topCompetitors.map(c => `${c.domain} (${c.pct}%)`).join(', ');
+    actions.push({
+      n: n(3),
+      title: `Close the competitor citation gap: ${topCompetitors[0].domain} is outpacing you`,
+      body: `${compList} are appearing in AI responses while ${companyName} is not. These competitors are cited in roundup articles, analyst reports, and third-party review sites that AI engines use as reference sources. Get ${companyName} listed on G2, Gartner Peer Insights, and at least 3 editorial "best of" articles in your category. These citations feed directly into Gemini and OpenAI retrieval.`,
+    });
+  } else {
+    actions.push({
+      n: n(3),
+      title: `Build third-party citation presence to enter AI retrieval`,
+      body: `Neither ${companyName} nor its competitors appeared in AI responses — this category is unclaimed territory. Get listed first: submit to G2, Gartner Peer Insights, Capterra, and at least 3 editorial roundup articles. AI engines pull heavily from authoritative third-party sources. Being the first brand cited in a category-level roundup article gives a significant first-mover advantage in AI visibility.`,
+    });
+  }
+
+  // 04 — Weak prompt examples
+  const examplePrompts = weakPrompts.slice(0, 3).map(p => `"${p.query.slice(0, 80)}"`).join('; ');
+  actions.push({
+    n: n(4),
+    title: `Publish comparison and "best of" pages targeting high-intent buyer queries`,
+    body: `Prompts like ${examplePrompts} scored 0% on all engines. These are high-intent buyer queries that AI engines answer from comparison articles and buyer guides. Publishing a "${companyName} vs [competitor]" page and a "Top [category] platforms" guide where ${companyName} is featured and reviewed directly targets these query types. Structured comparison tables with pros/cons are especially well-cited by Claude and OpenAI.`,
+  });
+
+  // 05 — Google AIO fix
+  actions.push({
+    n: n(5),
+    title: `Add FAQ schema markup to all service pages to capture Google AI Overviews`,
+    body: `Google AI Overview (via SerpAPI) returned encoded tokens rather than brand mentions — this indicates AI Overviews aren't triggering for your query types yet. Adding FAQ schema markup (JSON-LD) to each service page directly increases the chance of appearing in AI Overview responses. Target question-format H2s that match the exact prompt phrasing, and ensure each page has a clear entity declaration (company name, category, location) in structured data.`,
+  });
+
+  // 06 — Co-citation
+  actions.push({
+    n: n(6),
+    title: `Build co-citation signals: thought leadership + press + podcast mentions`,
+    body: `AI engines build brand associations through co-citation — ${companyName} needs to consistently appear alongside its core category keywords across multiple domains. Target: 2 LinkedIn thought-leadership posts per week on category topics, 1 guest article per month on a DR 50+ industry publication, and at least 2 podcast appearances on relevant shows this quarter. Each co-citation strengthens the brand's topical authority signal in AI training and retrieval.`,
+  });
+
+  return actions;
+}
+
+const actions = generateActions(topicRows, compRows, overallPct, companyName, weakPrompts);
 
 // ── HTML helpers ──────────────────────────────────────────────────────────
 function bar(pctVal, color = '#e8304a') {
@@ -219,7 +278,7 @@ tr:nth-child(even) { background:#fafafa; }
 </style></head><body>
 
 <div class="report-header">
-  <h1>AI Visibility Report</h1>
+  <h1>${companyName} — AI Visibility Report</h1>
   <div class="meta">Scan date: ${scanDate} &nbsp;·&nbsp; ${scan.total_prompts} prompts &nbsp;·&nbsp; ${totalEngines} engines</div>
   <div class="domain-pill">${DOMAIN}</div>
 </div>
@@ -274,13 +333,25 @@ const htmlPath = path.join(__dirname, 'data', DOMAIN, 'report.html');
 fs.writeFileSync(htmlPath, html);
 console.log('HTML written, launching Chrome...');
 
+const CHROME_CANDIDATES = [
+  process.env.CHROME_PATH,
+  '/nix/var/nix/profiles/default/bin/chromium',   // Railway nixpacks
+  '/usr/bin/chromium-browser',                     // Debian/Ubuntu
+  '/usr/bin/chromium',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', // macOS
+];
+const CHROME_PATH = CHROME_CANDIDATES.find(p => p && fs.existsSync(p));
+if (!CHROME_PATH) throw new Error('No Chrome/Chromium binary found. Set CHROME_PATH env var.');
+
 const browser = await puppeteer.launch({
-  executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  executablePath: CHROME_PATH,
   headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
 });
 const page = await browser.newPage();
 await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
 await page.pdf({ path: outputPath, format: 'A4', printBackground: true, margin: { top: '0', right: '0', bottom: '0', left: '0' } });
 await browser.close();
 console.log(`Report saved → ${outputPath}`);
+return outputPath;
+} // end _generate
