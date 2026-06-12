@@ -307,6 +307,12 @@ app.get('/dashboard/api/clients', requireDashboard, async (req, res) => {
   }
 });
 
+app.get('/dashboard/api/client/:domain', requireDashboard, (req, res) => {
+  const p = path.join(__dirname, 'data', req.params.domain, 'client.json');
+  if (!fs.existsSync(p)) return res.status(404).json({ error: 'No client config' });
+  try { res.json(JSON.parse(fs.readFileSync(p, 'utf8'))); } catch { res.status(500).json({ error: 'Read failed' }); }
+});
+
 app.get('/dashboard/api/results/:domain', requireDashboard, async (req, res) => {
   const domain = req.params.domain;
   const scanPath = path.join(__dirname, 'data', domain, 'latest_scan.json');

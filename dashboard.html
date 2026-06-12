@@ -180,7 +180,7 @@ const ENGINES = ['openai','serpapi_aio','claude','gemini'];
 const ENGINE_LABELS = {openai:'OpenAI',serpapi_aio:'Google AI Mode',claude:'Claude',gemini:'Gemini'};
 const ENGINE_COLORS = {openai:'#22c55e',serpapi_aio:'#3b82f6',claude:'#a855f7',gemini:'#f59e0b'};
 
-let state = { clients: [], selected: null, results: null, history: [] };
+let state = { clients: [], selected: null, results: null, history: [], clientConfig: null };
 let historyChart = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────
@@ -274,13 +274,15 @@ async function selectClient(domain) {
   document.getElementById('btn-report').style.display = '';
   document.getElementById('content').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
 
-  const [resultsResp, histResp] = await Promise.allSettled([
+  const [resultsResp, histResp, clientResp] = await Promise.allSettled([
     api('/results/' + domain),
     api('/history/' + domain),
+    api('/client/' + domain),
   ]);
 
   state.results = resultsResp.status === 'fulfilled' ? resultsResp.value : null;
   state.history = histResp.status === 'fulfilled' ? (histResp.value.scans || []) : [];
+  state.clientConfig = clientResp.status === 'fulfilled' ? clientResp.value : null;
 
   // Update sidebar % from actual scan data
   if (state.results?.results) {
@@ -323,8 +325,30 @@ function switchTabDirect(name) {
 }
 
 // ── Overview tab ──────────────────────────────────────────────────────────
+function buildClientInfoCard() {
+  const c = state.clientConfig;
+  if (!c) return '';
+  const competitors = (c.competitor_domains || []);
+  return `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">About</div>
+        <div style="font-size:14px;color:var(--text);line-height:1.6">${escHtml(c.icp_description || c.company_name || c.domain)}</div>
+        ${c.brand_terms?.length ? `<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+          ${c.brand_terms.map(t => `<span style="padding:2px 8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);border-radius:4px;font-size:11px;color:var(--accent2)">${escHtml(t)}</span>`).join('')}
+        </div>` : ''}
+      </div>
+      ${competitors.length ? `<div style="min-width:200px">
+        <div style="font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Tracked Competitors</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${competitors.map(d => `<div style="font-size:12px;color:var(--text);padding:3px 8px;background:var(--surface2);border-radius:4px;border:1px solid var(--border)">${escHtml(d)}</div>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
 function buildOverviewTab() {
-  if (!state.results?.results) return '<div class="empty">No scan data yet. Run a scan to see results.</div>';
+  if (!state.results?.results) return `${buildClientInfoCard()}<div class="empty">No scan data yet. Run a scan to see results.</div>`;
   const results = state.results.results;
   const scanDate = state.results.scan_date ? fmtDate(state.results.scan_date) : '';
 
@@ -354,6 +378,7 @@ function buildOverviewTab() {
     .sort((a, b) => b.pct - a.pct);
 
   return `
+    ${buildClientInfoCard()}
     <div class="cards">
       <div class="card card-accent">
         <div class="card-label">Overall Visibility</div>
