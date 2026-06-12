@@ -217,6 +217,22 @@ app.get('/clients', requireAuth, async (req, res) => {
 });
 
 // ── GET /health ────────────────────────────────────────────────────────────
+// ONE-TIME: recalculate overall_pct for all scans using per-prompt metric
+app.post('/admin/recalc-pct', requireAuth, async (req, res) => {
+  const { rows } = await db.query(`SELECT scan_id, domain, results FROM weekly_scans WHERE results IS NOT NULL`);
+  const engines = ['openai','serpapi_aio','claude','gemini'];
+  let updated = 0;
+  for (const row of rows) {
+    const results = typeof row.results === 'string' ? JSON.parse(row.results) : row.results;
+    if (!Array.isArray(results)) continue;
+    const hit = results.filter(r => !r.error && engines.some(k => r.engines?.[k]?.brand_mentioned)).length;
+    const pct = results.length > 0 ? Math.round(hit / results.length * 100) : 0;
+    await db.query(`UPDATE weekly_scans SET overall_pct = $1 WHERE scan_id = $2`, [pct, row.scan_id]);
+    updated++;
+  }
+  res.json({ ok: true, updated });
+});
+
 app.get('/health', async (_req, res) => {
   const jobs = await queue.listRecentJobs(5).catch(() => []);
   res.json({ ok: true, recent_jobs: jobs.length });

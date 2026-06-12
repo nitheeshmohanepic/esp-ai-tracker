@@ -395,7 +395,9 @@ export async function scan(domain, { job_id, scan_id: providedScanId, onProgress
       for (const c of allComps) competitorMentions[c] = (competitorMentions[c] || 0) + 1;
     }
   }
-  const overall_pct = total > 0 ? Math.round((mentioned / total) * 100) : 0;
+  // Per-prompt visibility: % of prompts where at least one engine mentioned the brand
+  const promptsMentioned = results.filter(r => !r.error && ENGINE_KEYS.some(k => r.engines?.[k]?.brand_mentioned)).length;
+  const overall_pct = results.length > 0 ? Math.round((promptsMentioned / results.length) * 100) : 0;
 
   const output = {
     domain, scan_date: new Date().toISOString(), scan_id: scanId,
