@@ -1,0 +1,252 @@
+[
+  {
+    "id": "f01",
+    "topic_bucket": "ML Model Monitoring",
+    "query": "What are the best ML model monitoring platforms for production AI systems?"
+  },
+  {
+    "id": "f02",
+    "topic_bucket": "ML Model Monitoring",
+    "query": "How do data science teams monitor machine learning model performance and detect drift in production?"
+  },
+  {
+    "id": "f03",
+    "topic_bucket": "ML Model Monitoring",
+    "query": "What tools do MLOps engineers use to monitor ML models in production?"
+  },
+  {
+    "id": "f04",
+    "topic_bucket": "ML Model Monitoring",
+    "query": "What is the best model monitoring framework for detecting data drift and model degradation?"
+  },
+  {
+    "id": "f05",
+    "topic_bucket": "ML Model Monitoring",
+    "query": "How do companies monitor AI model quality and performance over time?"
+  },
+  {
+    "id": "f06",
+    "topic_bucket": "AI Observability",
+    "query": "What are the leading AI observability platforms for enterprise ML teams?"
+  },
+  {
+    "id": "f07",
+    "topic_bucket": "AI Observability",
+    "query": "What is AI observability and which tools provide it for production ML systems?"
+  },
+  {
+    "id": "f08",
+    "topic_bucket": "AI Observability",
+    "query": "How do ML teams get end-to-end observability across their AI pipelines?"
+  },
+  {
+    "id": "f09",
+    "topic_bucket": "AI Observability",
+    "query": "What platforms provide ML observability for large-scale AI deployments?"
+  },
+  {
+    "id": "f10",
+    "topic_bucket": "AI Observability",
+    "query": "What are the top MLOps observability tools in 2025?"
+  },
+  {
+    "id": "f11",
+    "topic_bucket": "Explainable AI",
+    "query": "What are the best explainable AI tools for enterprise machine learning?"
+  },
+  {
+    "id": "f12",
+    "topic_bucket": "Explainable AI",
+    "query": "How do companies implement AI explainability and model transparency in production?"
+  },
+  {
+    "id": "f13",
+    "topic_bucket": "Explainable AI",
+    "query": "What platforms help with explainable AI and responsible AI governance?"
+  },
+  {
+    "id": "f14",
+    "topic_bucket": "Explainable AI",
+    "query": "Which tools provide AI model explainability for regulated industries like banking and insurance?"
+  },
+  {
+    "id": "f15",
+    "topic_bucket": "Explainable AI",
+    "query": "What are the top explainable AI companies and platforms?"
+  },
+  {
+    "id": "f16",
+    "topic_bucket": "LLM Observability",
+    "query": "What are the best LLM observability and monitoring tools for production deployments?"
+  },
+  {
+    "id": "f17",
+    "topic_bucket": "LLM Observability",
+    "query": "How do teams monitor large language models in production for quality and safety?"
+  },
+  {
+    "id": "f18",
+    "topic_bucket": "LLM Observability",
+    "query": "What platforms provide observability and evaluation for LLM-powered applications?"
+  },
+  {
+    "id": "f19",
+    "topic_bucket": "LLM Observability",
+    "query": "What tools detect hallucinations and monitor output quality in production LLMs?"
+  },
+  {
+    "id": "f20",
+    "topic_bucket": "LLM Observability",
+    "query": "How do enterprises monitor and evaluate AI agents and LLM pipelines?"
+  },
+  {
+    "id": "f21",
+    "topic_bucket": "ML Lifecycle Management",
+    "query": "What tools help manage the full ML model lifecycle from development to production?"
+  },
+  {
+    "id": "f22",
+    "topic_bucket": "ML Lifecycle Management",
+    "query": "How do MLOps teams manage model versioning, deployment, and lifecycle management?"
+  },
+  {
+    "id": "f23",
+    "topic_bucket": "ML Lifecycle Management",
+    "query": "What are the best platforms for ML model management and model registry?"
+  },
+  {
+    "id": "f24",
+    "topic_bucket": "ML Lifecycle Management",
+    "query": "How do enterprises standardize their machine learning model lifecycle management?"
+  },
+  {
+    "id": "f25",
+    "topic_bucket": "ML Lifecycle Management",
+    "query": "What MLOps platforms provide end-to-end model lifecycle management?"
+  },
+  {
+    "id": "f26",
+    "topic_bucket": "Model Risk Management",
+    "query": "What platforms help financial services firms with AI model risk management?"
+  },
+  {
+    "id": "f27",
+    "topic_bucket": "Model Risk Management",
+    "query": "How do banks and insurance companies manage model risk for AI and machine learning?"
+  },
+  {
+    "id": "f28",
+    "topic_bucket": "Model Risk Management",
+    "query": "What tools help enterprises comply with SR 11-7 model risk management guidelines for AI?"
+  },
+  {
+    "id": "f29",
+    "topic_bucket": "Model Risk Management",
+    "query": "What are the best AI model validation and model risk management platforms?"
+  },
+  {
+    "id": "f30",
+    "topic_bucket": "Model Risk Management",
+    "query": "How do regulated industries monitor and audit AI model decisions for compliance?"
+  },
+  {
+    "id": "f31",
+    "topic_bucket": "Data Drift Detection",
+    "query": "What are the best tools for detecting data drift and concept drift in ML models?"
+  },
+  {
+    "id": "f32",
+    "topic_bucket": "Data Drift Detection",
+    "query": "How do ML teams detect and respond to feature drift in production models?"
+  },
+  {
+    "id": "f33",
+    "topic_bucket": "Data Drift Detection",
+    "query": "What platforms automatically detect data quality issues and drift in AI pipelines?"
+  },
+  {
+    "id": "f34",
+    "topic_bucket": "Data Drift Detection",
+    "query": "What is the best way to monitor input data distribution shift in production ML?"
+  },
+  {
+    "id": "f35",
+    "topic_bucket": "Data Drift Detection",
+    "query": "Which ML monitoring tools provide statistical tests for detecting drift?"
+  },
+  {
+    "id": "f36",
+    "topic_bucket": "Responsible AI",
+    "query": "What platforms help companies implement responsible AI and fairness monitoring?"
+  },
+  {
+    "id": "f37",
+    "topic_bucket": "Responsible AI",
+    "query": "How do enterprises monitor AI models for bias and fairness in production?"
+  },
+  {
+    "id": "f38",
+    "topic_bucket": "Responsible AI",
+    "query": "What tools provide bias detection and fairness analysis for ML models?"
+  },
+  {
+    "id": "f39",
+    "topic_bucket": "Responsible AI",
+    "query": "What are the leading responsible AI platforms for enterprise AI governance?"
+  },
+  {
+    "id": "f40",
+    "topic_bucket": "Responsible AI",
+    "query": "How do companies ensure ethical AI and model accountability in production?"
+  },
+  {
+    "id": "f41",
+    "topic_bucket": "MLOps Platform",
+    "query": "What are the best end-to-end MLOps platforms for enterprise data science teams?"
+  },
+  {
+    "id": "f42",
+    "topic_bucket": "MLOps Platform",
+    "query": "How do large enterprises build and manage MLOps infrastructure at scale?"
+  },
+  {
+    "id": "f43",
+    "topic_bucket": "MLOps Platform",
+    "query": "What MLOps tools integrate with SageMaker and Databricks for model monitoring?"
+  },
+  {
+    "id": "f44",
+    "topic_bucket": "MLOps Platform",
+    "query": "What are the top MLOps companies and platforms in 2025?"
+  },
+  {
+    "id": "f45",
+    "topic_bucket": "MLOps Platform",
+    "query": "How do ML teams automate model retraining and deployment in production?"
+  },
+  {
+    "id": "f46",
+    "topic_bucket": "Competitor Comparison",
+    "query": "What are the alternatives to Fiddler AI for ML model monitoring?"
+  },
+  {
+    "id": "f47",
+    "topic_bucket": "Competitor Comparison",
+    "query": "Fiddler vs Arize AI for production model monitoring — which is better?"
+  },
+  {
+    "id": "f48",
+    "topic_bucket": "Competitor Comparison",
+    "query": "What are the top Arize AI competitors for ML observability?"
+  },
+  {
+    "id": "f49",
+    "topic_bucket": "Competitor Comparison",
+    "query": "Which ML monitoring platform is best — Fiddler, Arize, WhyLabs, or Arthur?"
+  },
+  {
+    "id": "f50",
+    "topic_bucket": "Competitor Comparison",
+    "query": "What companies compete with WhyLabs and Evidently AI for model monitoring?"
+  }
+]

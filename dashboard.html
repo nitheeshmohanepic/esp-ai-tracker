@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP AI Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0d14;--surface:#13161f;--surface2:#1a1d2a;--border:#22263a;
+  --text:#e8eaf0;--dim:#6b7280;--accent:#6366f1;--accent2:#818cf8;
+  --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --purple:#a855f7;--cyan:#06b6d4;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;display:flex;height:100vh;overflow:hidden;font-size:14px}
+
+/* Sidebar */
+#sidebar{width:240px;min-width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:20px 16px 12px;border-bottom:1px solid var(--border)}
+.logo{font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.logo span{color:var(--accent)}
+.sidebar-section{padding:12px 8px 4px;font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+.client-item{padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;margin:1px 4px;transition:background .15s}
+.client-item:hover{background:var(--surface2)}
+.client-item.active{background:var(--accent);color:#fff}
+.client-item .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.client-item .dot.dim{background:var(--border)}
+.client-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.client-pct{margin-left:auto;font-size:12px;font-weight:700;color:var(--accent2)}
+.client-item.active .client-pct{color:rgba(255,255,255,.8)}
+.sidebar-footer{margin-top:auto;padding:12px 12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.sidebar-footer a{color:var(--dim);font-size:12px;text-decoration:none}
+.sidebar-footer a:hover{color:var(--text)}
+#clients-list{overflow-y:auto;flex:1;padding-bottom:8px}
+
+/* Main */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#topbar{padding:0 24px;height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
+.topbar-title{font-size:16px;font-weight:600;color:#fff}
+.topbar-meta{font-size:12px;color:var(--dim)}
+.btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2);color:#fff}
+
+#content{flex:1;overflow-y:auto;padding:24px}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{padding:8px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.card-label{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.card-value{font-size:28px;font-weight:700;color:#fff;line-height:1}
+.card-sub{font-size:12px;color:var(--dim);margin-top:4px}
+.card-accent{border-color:var(--accent);background:rgba(99,102,241,.06)}
+
+/* Engine bars */
+.engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.engine-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.engine-name{font-size:12px;font-weight:600;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.engine-pct{font-size:32px;font-weight:700;margin-bottom:8px}
+.bar-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.engine-detail{font-size:12px;color:var(--dim);margin-top:6px}
+
+/* Table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.table-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.table-title{font-size:13px;font-weight:600}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-green{background:rgba(34,197,94,.15);color:#22c55e}
+.badge-yellow{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge-red{background:rgba(239,68,68,.15);color:#ef4444}
+.badge-blue{background:rgba(59,130,246,.15);color:#3b82f6}
+.badge-purple{background:rgba(168,85,247,.15);color:#a855f7}
+
+/* Prompt table */
+.prompt-q{max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.engine-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px}
+.yes{color:var(--green);font-weight:600}
+.no{color:var(--dim)}
+.snippet-cell{max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--dim);font-size:12px;cursor:pointer}
+.snippet-cell:hover{color:var(--text)}
+
+/* Filter row */
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+select,input[type=text]{padding:7px 10px;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;outline:none}
+select:focus,input[type=text]:focus{border-color:var(--accent)}
+
+/* Chart container */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:24px}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:16px}
+.chart-inner{position:relative;height:220px}
+
+/* Overview landing */
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:border-color .15s}
+.client-card:hover{border-color:var(--accent)}
+.cc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cc-name{font-size:15px;font-weight:600;color:#fff}
+.cc-domain{font-size:12px;color:var(--dim);margin-top:2px}
+.cc-pct{font-size:30px;font-weight:700}
+.cc-bars{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+.cc-bar-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim)}
+.cc-bar-label{width:80px;text-align:right;flex-shrink:0}
+.cc-bar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.cc-bar-fill{height:100%;border-radius:2px}
+.cc-bar-val{width:30px;text-align:right;flex-shrink:0}
+
+/* Modal */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
+#modal-overlay.open{display:flex}
+#modal{background:var(--surface2);border:1px solid var(--border);border-radius:12px;width:700px;max-width:95vw;max-height:80vh;overflow:hidden;display:flex;flex-direction:column}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:14px;font-weight:600}
+.modal-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1}
+.modal-body{padding:20px;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text)}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--dim);font-size:14px;gap:10px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:60px 20px;color:var(--dim)}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">ESP <span>AI Tracker</span></div>
+  </div>
+  <div class="sidebar-section">Clients</div>
+  <div id="clients-list"><div class="loading"><div class="spinner"></div></div></div>
+  <div class="sidebar-footer">
+    <a href="/dashboard/logout">Sign out</a>
+  </div>
+</div>
+
+<div id="main">
+  <div id="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Overview</div>
+      <div class="topbar-meta" id="topbar-meta"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="btn-scan" style="display:none" onclick="triggerScan()">Run Scan</button>
+      <button class="btn" id="btn-report" style="display:none" onclick="downloadReport()">Download Report</button>
+    </div>
+  </div>
+  <div id="content">
+    <div class="loading"><div class="spinner"></div> Loading...</div>
+  </div>
+</div>
+
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const API = '/dashboard/api';
+const ENGINES = ['openai','serpapi_aio','claude','gemini'];
+const ENGINE_LABELS = {openai:'OpenAI',serpapi_aio:'Google AI Mode',claude:'Claude',gemini:'Gemini'};
+const ENGINE_COLORS = {openai:'#22c55e',serpapi_aio:'#3b82f6',claude:'#a855f7',gemini:'#f59e0b'};
+
+let state = { clients: [], selected: null, results: null, history: [] };
+let historyChart = null;
+
+// ── Init ──────────────────────────────────────────────────────────────────
+async function init() {
+  const { clients } = await api('/clients');
+  state.clients = clients || [];
+  renderSidebar();
+  renderOverview();
+}
+
+async function api(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const el = document.getElementById('clients-list');
+  if (!state.clients.length) { el.innerHTML = '<div class="empty" style="padding:20px;font-size:12px">No clients yet</div>'; return; }
+  el.innerHTML = state.clients.map(c => `
+    <div class="client-item ${state.selected === c.domain ? 'active' : ''}" onclick="selectClient('${c.domain}')">
+      <div class="dot ${c.overall_pct == null ? 'dim' : ''}"></div>
+      <div class="client-name">${c.company_name || c.domain}</div>
+      ${c.overall_pct != null ? `<div class="client-pct">${c.overall_pct}%</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────
+function renderOverview() {
+  document.getElementById('topbar-title').textContent = 'Overview';
+  document.getElementById('topbar-meta').textContent = `${state.clients.length} clients`;
+  document.getElementById('btn-scan').style.display = 'none';
+  document.getElementById('btn-report').style.display = 'none';
+
+  const total = state.clients.length;
+  const scanned = state.clients.filter(c => c.overall_pct != null).length;
+  const avgPct = scanned ? Math.round(state.clients.filter(c=>c.overall_pct!=null).reduce((s,c)=>s+Number(c.overall_pct),0)/scanned) : 0;
+
+  document.getElementById('content').innerHTML = `
+    <div class="cards">
+      <div class="card card-accent">
+        <div class="card-label">Total Clients</div>
+        <div class="card-value">${total}</div>
+        <div class="card-sub">${scanned} with scan data</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Avg AI Visibility</div>
+        <div class="card-value" style="color:${pctColor(avgPct)}">${scanned ? avgPct+'%' : '—'}</div>
+        <div class="card-sub">across all clients</div>
+      </div>
+    </div>
+    <div class="clients-grid" id="clients-grid">
+      ${state.clients.map(c => clientCard(c)).join('')}
+    </div>`;
+}
+
+function clientCard(c) {
+  const pct = c.overall_pct != null ? Number(c.overall_pct) : null;
+  const engines = ['openai','serpapi_aio','claude','gemini'];
+  return `
+    <div class="client-card" onclick="selectClient('${c.domain}')">
+      <div class="cc-header">
+        <div>
+          <div class="cc-name">${c.company_name || c.domain}</div>
+          <div class="cc-domain">${c.domain}</div>
+        </div>
+        <div class="cc-pct" style="color:${pct!=null?pctColor(pct):'var(--dim)'}">${pct!=null?pct+'%':'—'}</div>
+      </div>
+      ${c.scan_date ? `<div style="font-size:11px;color:var(--dim);margin-bottom:8px">Last scan: ${fmtDate(c.scan_date)}</div>` : ''}
+      <div class="cc-bars">
+        ${engines.map(e => `
+          <div class="cc-bar-row">
+            <div class="cc-bar-label" style="color:${ENGINE_COLORS[e]}">${ENGINE_LABELS[e]}</div>
+            <div class="cc-bar-track"><div class="cc-bar-fill" style="width:0%;background:${ENGINE_COLORS[e]}" data-pct="?"></div></div>
+            <div class="cc-bar-val">—</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── Select client ─────────────────────────────────────────────────────────
+async function selectClient(domain) {
+  state.selected = domain;
+  renderSidebar();
+  const client = state.clients.find(c => c.domain === domain);
+  document.getElementById('topbar-title').textContent = client?.company_name || domain;
+  document.getElementById('topbar-meta').textContent = domain;
+  document.getElementById('btn-scan').style.display = '';
+  document.getElementById('btn-report').style.display = '';
+  document.getElementById('content').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+
+  const [resultsResp, histResp] = await Promise.allSettled([
+    api('/results/' + domain),
+    api('/history/' + domain),
+  ]);
+
+  state.results = resultsResp.status === 'fulfilled' ? resultsResp.value : null;
+  state.history = histResp.status === 'fulfilled' ? (histResp.value.scans || []) : [];
+
+  renderClientView();
+}
+
+function renderClientView() {
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('overview',this)">Overview</div>
+      <div class="tab" onclick="switchTab('prompts',this)">Prompts</div>
+      <div class="tab" onclick="switchTab('history',this)">History</div>
+      <div class="tab" onclick="switchTab('competitors',this)">Competitors</div>
+    </div>
+    <div id="tab-content"></div>`;
+  switchTabDirect('overview');
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  switchTabDirect(name);
+}
+
+function switchTabDirect(name) {
+  const el = document.getElementById('tab-content');
+  if (name === 'overview') el.innerHTML = buildOverviewTab();
+  else if (name === 'prompts') el.innerHTML = buildPromptsTab();
+  else if (name === 'history') { el.innerHTML = buildHistoryTab(); renderHistoryChart(); }
+  else if (name === 'competitors') el.innerHTML = buildCompetitorsTab();
+}
+
+// ── Overview tab ──────────────────────────────────────────────────────────
+function buildOverviewTab() {
+  if (!state.results?.results) return '<div class="empty">No scan data yet. Run a scan to see results.</div>';
+  const results = state.results.results;
+  const scanDate = state.results.scan_date ? fmtDate(state.results.scan_date) : '';
+
+  const overallHits = results.filter(r => ENGINES.some(k => r.engines?.[k]?.brand_mentioned)).length;
+  const overallPct = pct(overallHits, results.length);
+
+  const engineStats = ENGINES.map(e => {
+    const rows = results.filter(r => r.engines?.[e]);
+    const errs = rows.filter(r => r.engines[e]?.response_snippet?.startsWith('ERROR')).length;
+    const valid = rows.length - errs;
+    const hits = rows.filter(r => r.engines[e]?.brand_mentioned).length;
+    return { e, hits, valid, total: rows.length, errs, pct: pct(hits, valid || rows.length) };
+  });
+
+  const topicMap = {};
+  for (const r of results) {
+    const t = r.topic_bucket;
+    if (!topicMap[t]) topicMap[t] = { hits: 0, total: 0 };
+    for (const e of ENGINES) {
+      if (!r.engines?.[e] || r.engines[e]?.response_snippet?.startsWith('ERROR')) continue;
+      topicMap[t].total++;
+      if (r.engines[e].brand_mentioned) topicMap[t].hits++;
+    }
+  }
+  const topicRows = Object.entries(topicMap)
+    .map(([t, v]) => ({ t, pct: pct(v.hits, v.total), hits: v.hits, total: v.total }))
+    .sort((a, b) => b.pct - a.pct);
+
+  return `
+    <div class="cards">
+      <div class="card card-accent">
+        <div class="card-label">Overall Visibility</div>
+        <div class="card-value" style="color:${pctColor(overallPct)}">${overallPct}%</div>
+        <div class="card-sub">${overallHits}/${results.length} prompts · ${scanDate}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Prompts Tested</div>
+        <div class="card-value">${results.length}</div>
+        <div class="card-sub">${[...new Set(results.map(r=>r.topic_bucket))].length} topic buckets</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Best Engine</div>
+        <div class="card-value" style="font-size:18px;padding-top:4px">${ENGINE_LABELS[engineStats.sort((a,b)=>b.pct-a.pct)[0].e]}</div>
+        <div class="card-sub">${engineStats[0].pct}% visibility</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Weakest Bucket</div>
+        <div class="card-value" style="font-size:16px;padding-top:6px">${topicRows[topicRows.length-1]?.t || '—'}</div>
+        <div class="card-sub">${topicRows[topicRows.length-1]?.pct ?? 0}% visibility</div>
+      </div>
+    </div>
+
+    <div class="engine-grid">
+      ${engineStats.sort((a,b)=>b.pct-a.pct).map(s => `
+        <div class="engine-card">
+          <div class="engine-name" style="color:${ENGINE_COLORS[s.e]}">${ENGINE_LABELS[s.e]}</div>
+          <div class="engine-pct" style="color:${pctColor(s.pct)}">${s.pct}%</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;background:${ENGINE_COLORS[s.e]}"></div></div>
+          <div class="engine-detail">${s.hits}/${s.valid} prompts${s.errs>0?` · ${s.errs} errors`:''}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-header"><div class="table-title">Visibility by Topic Bucket</div></div>
+      <table>
+        <thead><tr>
+          <th>Bucket</th>
+          <th>Overall</th>
+          ${ENGINES.map(e=>`<th style="color:${ENGINE_COLORS[e]}">${ENGINE_LABELS[e]}</th>`).join('')}
+          <th>Prompts</th>
+        </tr></thead>
+        <tbody>
+          ${topicRows.map(row => {
+            const byEngine = ENGINES.map(e => {
+              const eRows = results.filter(r => r.topic_bucket === row.t && r.engines?.[e] && !r.engines[e]?.response_snippet?.startsWith('ERROR'));
+              const h = eRows.filter(r => r.engines[e].brand_mentioned).length;
+              return `<td><span class="badge ${badgeClass(pct(h,eRows.length))}">${pct(h,eRows.length)}%</span></td>`;
+            }).join('');
+            return `<tr>
+              <td style="font-weight:500">${row.t}</td>
+              <td><span class="badge ${badgeClass(row.pct)}">${row.pct}%</span></td>
+              ${byEngine}
+              <td style="color:var(--dim)">${results.filter(r=>r.topic_bucket===row.t).length}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// ── Prompts tab ───────────────────────────────────────────────────────────
+function buildPromptsTab() {
+  if (!state.results?.results) return '<div class="empty">No scan data yet.</div>';
+  const results = state.results.results;
+  const buckets = [...new Set(results.map(r => r.topic_bucket))];
+
+  return `
+    <div class="filters">
+      <select id="filter-bucket" onchange="filterPrompts()">
+        <option value="">All Buckets</option>
+        ${buckets.map(b => `<option value="${b}">${b}</option>`).join('')}
+      </select>
+      <select id="filter-engine" onchange="filterPrompts()">
+        <option value="">All Engines</option>
+        ${ENGINES.map(e => `<option value="${e}">${ENGINE_LABELS[e]}</option>`).join('')}
+      </select>
+      <select id="filter-brand" onchange="filterPrompts()">
+        <option value="">All Results</option>
+        <option value="yes">Brand Mentioned</option>
+        <option value="no">Not Mentioned</option>
+      </select>
+      <input type="text" id="filter-search" placeholder="Search prompts..." oninput="filterPrompts()" style="min-width:200px">
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">Prompt Results</div>
+        <div style="font-size:12px;color:var(--dim)" id="prompt-count">${results.length} prompts</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>ID</th>
+          <th>Bucket</th>
+          <th>Query</th>
+          ${ENGINES.map(e=>`<th style="color:${ENGINE_COLORS[e]}">${ENGINE_LABELS[e]}</th>`).join('')}
+        </tr></thead>
+        <tbody id="prompts-tbody">
+          ${renderPromptRows(results)}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderPromptRows(rows) {
+  return rows.map(r => `
+    <tr>
+      <td style="color:var(--dim);font-family:monospace;font-size:11px">${r.prompt_id || r.id || ''}</td>
+      <td><span class="badge badge-blue">${r.topic_bucket}</span></td>
+      <td class="prompt-q" title="${escHtml(r.query)}">${escHtml(r.query)}</td>
+      ${ENGINES.map(e => {
+        const eng = r.engines?.[e];
+        if (!eng) return '<td style="color:var(--dim)">—</td>';
+        if (eng.response_snippet?.startsWith('ERROR')) return '<td><span class="badge badge-red">err</span></td>';
+        const mentioned = eng.brand_mentioned;
+        const snippet = eng.response_snippet || '';
+        return `<td>
+          <span class="${mentioned?'yes':'no'}">${mentioned?'✓':'·'}</span>
+          <span class="snippet-cell" onclick='showSnippet(${JSON.stringify(escHtml(r.query))},${JSON.stringify(e)},${JSON.stringify(escHtml(snippet))})'
+            title="Click to view response" style="margin-left:4px;font-size:11px">${escHtml(snippet.slice(0,60))}…</span>
+        </td>`;
+      }).join('')}
+    </tr>`).join('');
+}
+
+function filterPrompts() {
+  if (!state.results?.results) return;
+  const bucket = document.getElementById('filter-bucket')?.value;
+  const engine = document.getElementById('filter-engine')?.value;
+  const brand  = document.getElementById('filter-brand')?.value;
+  const search = document.getElementById('filter-search')?.value?.toLowerCase();
+
+  let rows = state.results.results;
+  if (bucket) rows = rows.filter(r => r.topic_bucket === bucket);
+  if (search) rows = rows.filter(r => r.query.toLowerCase().includes(search));
+  if (brand === 'yes') rows = rows.filter(r => ENGINES.some(e => r.engines?.[e]?.brand_mentioned));
+  if (brand === 'no')  rows = rows.filter(r => ENGINES.every(e => !r.engines?.[e]?.brand_mentioned));
+  if (engine && brand) rows = rows.filter(r => brand === 'yes' ? r.engines?.[engine]?.brand_mentioned : !r.engines?.[engine]?.brand_mentioned);
+
+  document.getElementById('prompts-tbody').innerHTML = renderPromptRows(rows);
+  document.getElementById('prompt-count').textContent = `${rows.length} prompts`;
+}
+
+// ── History tab ───────────────────────────────────────────────────────────
+function buildHistoryTab() {
+  const scans = state.history;
+  if (!scans.length) return '<div class="empty">No scan history in database yet.</div>';
+
+  return `
+    <div class="chart-wrap">
+      <div class="chart-title">AI Visibility Over Time</div>
+      <div class="chart-inner"><canvas id="history-chart"></canvas></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header"><div class="table-title">Scan History</div></div>
+      <table>
+        <thead><tr>
+          <th>Date</th>
+          <th>Scan ID</th>
+          <th>Status</th>
+          <th>Prompts</th>
+          <th>Engines</th>
+          <th>Visibility</th>
+        </tr></thead>
+        <tbody>
+          ${scans.map(s => `<tr>
+            <td>${fmtDate(s.scan_date)}</td>
+            <td style="font-family:monospace;font-size:11px;color:var(--dim)">${(s.scan_id||'').slice(0,20)}</td>
+            <td><span class="badge ${s.scan_status==='done'?'badge-green':s.scan_status==='failed'?'badge-red':'badge-yellow'}">${s.scan_status}</span></td>
+            <td>${s.prompts_tested ?? '—'}</td>
+            <td style="font-size:11px;color:var(--dim)">${(s.engines_run||[]).join(', ')}</td>
+            <td><span class="badge ${badgeClass(s.overall_pct)}">${s.overall_pct != null ? s.overall_pct+'%' : '—'}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderHistoryChart() {
+  const scans = state.history.filter(s => s.overall_pct != null).reverse();
+  if (!scans.length) return;
+  const ctx = document.getElementById('history-chart')?.getContext('2d');
+  if (!ctx) return;
+  if (historyChart) historyChart.destroy();
+  historyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: scans.map(s => fmtDate(s.scan_date)),
+      datasets: [{
+        label: 'Visibility %',
+        data: scans.map(s => s.overall_pct),
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99,102,241,.1)',
+        tension: 0.3,
+        fill: true,
+        pointBackgroundColor: '#6366f1',
+        pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#22263a' }, ticks: { color: '#6b7280', font: { size: 11 } } },
+        y: { min: 0, max: 100, grid: { color: '#22263a' }, ticks: { color: '#6b7280', font: { size: 11 }, callback: v => v + '%' } }
+      }
+    }
+  });
+}
+
+// ── Competitors tab ───────────────────────────────────────────────────────
+function buildCompetitorsTab() {
+  if (!state.results?.results) return '<div class="empty">No scan data yet.</div>';
+  const results = state.results.results;
+  const counts = {};
+  for (const r of results) {
+    for (const e of ENGINES) {
+      const eng = r.engines?.[e];
+      for (const c of [...(eng?.competitors_mentioned||[]), ...(eng?.detected_competitors||[])]) {
+        if (!counts[c]) counts[c] = { total: 0, byEngine: {} };
+        counts[c].total++;
+        counts[c].byEngine[e] = (counts[c].byEngine[e]||0) + 1;
+      }
+    }
+  }
+  const rows = Object.entries(counts).sort((a,b)=>b[1].total-a[1].total).slice(0,50);
+  if (!rows.length) return '<div class="empty">No competitor mentions detected yet.</div>';
+
+  return `
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">Competitor Mentions in AI Responses</div>
+        <div style="font-size:12px;color:var(--dim)">${rows.length} unique competitors</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Competitor</th>
+          <th>Total</th>
+          ${ENGINES.map(e=>`<th style="color:${ENGINE_COLORS[e]}">${ENGINE_LABELS[e]}</th>`).join('')}
+        </tr></thead>
+        <tbody>
+          ${rows.map(([comp, d]) => `<tr>
+            <td style="font-weight:500">${comp}</td>
+            <td><strong>${d.total}</strong></td>
+            ${ENGINES.map(e => `<td style="color:var(--dim)">${d.byEngine[e]||'—'}</td>`).join('')}
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+function showSnippet(query, engine, snippet) {
+  document.getElementById('modal-title').textContent = `${ENGINE_LABELS[engine]} — Response`;
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:12px;padding:10px 12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--dim)">
+      <strong style="color:var(--text)">Query:</strong> ${query}
+    </div>
+    <div style="white-space:pre-wrap;font-family:system-ui;line-height:1.7">${snippet}</div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+async function triggerScan() {
+  if (!state.selected) return;
+  const btn = document.getElementById('btn-scan');
+  btn.textContent = 'Starting...'; btn.disabled = true;
+  try {
+    const r = await fetch('/scan', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${await getApiKey()}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain: state.selected })
+    });
+    const d = await r.json();
+    btn.textContent = `Running… (job ${d.job_id?.slice(0,8)})`;
+    pollScan(d.job_id, btn);
+  } catch(e) {
+    btn.textContent = 'Run Scan'; btn.disabled = false;
+    alert('Scan failed: ' + e.message);
+  }
+}
+async function pollScan(jobId, btn) {
+  const check = async () => {
+    try {
+      const r = await fetch(`/status/${jobId}`, { headers: { 'Authorization': `Bearer ${await getApiKey()}` } });
+      const d = await r.json();
+      if (d.status === 'done') {
+        btn.textContent = 'Run Scan'; btn.disabled = false;
+        await selectClient(state.selected);
+      } else if (d.status === 'failed') {
+        btn.textContent = 'Run Scan'; btn.disabled = false;
+        alert('Scan failed');
+      } else {
+        btn.textContent = `${d.progress||0}/${d.total||'?'} prompts…`;
+        setTimeout(check, 3000);
+      }
+    } catch { setTimeout(check, 5000); }
+  };
+  setTimeout(check, 3000);
+}
+async function getApiKey() {
+  // Fetch from a lightweight endpoint that echoes the configured key
+  return document.body.dataset.apikey || '';
+}
+function downloadReport() {
+  if (!state.selected) return;
+  window.open(`/report/${state.selected}?ds=${getCookie('ds')}`, '_blank');
+}
+function getCookie(name) {
+  return document.cookie.split(';').map(c=>c.trim().split('=')).find(([k])=>k===name)?.[1] || '';
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function pct(hits, total) { return total === 0 ? 0 : Math.round(hits/total*100); }
+function pctColor(p) { return p === 0 ? '#ef4444' : p < 20 ? '#f59e0b' : p < 50 ? '#3b82f6' : '#22c55e'; }
+function badgeClass(p) {
+  if (p == null) return '';
+  p = Number(p);
+  return p >= 50 ? 'badge-green' : p >= 20 ? 'badge-yellow' : 'badge-red';
+}
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+init().catch(err => {
+  document.getElementById('content').innerHTML = `<div class="empty">Failed to load: ${err.message}</div>`;
+});
+</script>
+</body>
+</html>

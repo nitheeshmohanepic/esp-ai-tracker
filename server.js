@@ -222,5 +222,93 @@ app.get('/health', async (_req, res) => {
   res.json({ ok: true, recent_jobs: jobs.length });
 });
 
+// ── Dashboard ──────────────────────────────────────────────────────────────
+const DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD || 'Epic@2026!';
+const dashboardSessions = new Set();
+
+function parseCookies(req) {
+  const out = {};
+  for (const c of (req.headers.cookie || '').split(';')) {
+    const [k, ...v] = c.trim().split('=');
+    if (k) out[k.trim()] = decodeURIComponent(v.join('=').trim());
+  }
+  return out;
+}
+
+function requireDashboard(req, res, next) {
+  if (dashboardSessions.has(parseCookies(req).ds)) return next();
+  res.redirect('/dashboard/login');
+}
+
+app.use('/dashboard/static', express.static(path.join(__dirname, 'public')));
+
+app.get('/dashboard/login', (req, res) => {
+  const err = req.query.error ? '<p class="err">Wrong password</p>' : '';
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ESP Login</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0f1117;display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui,sans-serif}
+.box{background:#1a1d27;border:1px solid #2a2d3e;border-radius:12px;padding:40px;width:360px;text-align:center}
+h1{color:#fff;font-size:20px;margin-bottom:6px}.sub{color:#6b7280;font-size:14px;margin-bottom:28px}
+input{width:100%;padding:11px 14px;background:#0f1117;border:1px solid #2a2d3e;border-radius:8px;color:#fff;font-size:15px;margin-bottom:14px;outline:none}
+input:focus{border-color:#6366f1}button{width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600}
+button:hover{background:#5254cc}.err{color:#ef4444;font-size:13px;margin-bottom:12px}</style></head>
+<body><div class="box"><h1>ESP AI Tracker</h1><p class="sub">Enter your password to continue</p>
+${err}<form method="POST" action="/dashboard/login">
+<input type="password" name="password" placeholder="Password" autofocus>
+<button type="submit">Sign In</button></form></div></body></html>`);
+});
+
+app.post('/dashboard/login', express.urlencoded({ extended: false }), (req, res) => {
+  if (req.body.password === DASHBOARD_PASSWORD) {
+    const token = crypto.randomUUID();
+    dashboardSessions.add(token);
+    res.setHeader('Set-Cookie', `ds=${token}; HttpOnly; Path=/; SameSite=Lax`);
+    return res.redirect('/dashboard');
+  }
+  res.redirect('/dashboard/login?error=1');
+});
+
+app.get('/dashboard/logout', (req, res) => {
+  dashboardSessions.delete(parseCookies(req).ds);
+  res.clearCookie('ds');
+  res.redirect('/dashboard/login');
+});
+
+app.get('/dashboard', requireDashboard, (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// Dashboard data endpoints (session-protected, no API key needed)
+app.get('/dashboard/api/clients', requireDashboard, async (req, res) => {
+  try {
+    res.json({ clients: await db.listClients() });
+  } catch (err) {
+    const dataDir = path.join(__dirname, 'data');
+    const clients = fs.existsSync(dataDir)
+      ? fs.readdirSync(dataDir).filter(d => fs.existsSync(path.join(dataDir, d, 'prompts.json')))
+          .map(domain => ({ domain, company_name: domain, overall_pct: null, scan_status: 'idle' }))
+      : [];
+    res.json({ clients });
+  }
+});
+
+app.get('/dashboard/api/results/:domain', requireDashboard, async (req, res) => {
+  const domain = req.params.domain;
+  const scanPath = path.join(__dirname, 'data', domain, 'latest_scan.json');
+  if (fs.existsSync(scanPath)) {
+    try { return res.json(JSON.parse(fs.readFileSync(scanPath, 'utf8'))); } catch {}
+  }
+  try {
+    const scan = await db.getLatestScan(domain);
+    if (!scan) return res.status(404).json({ error: 'No results' });
+    res.json({ domain, scan_date: scan.scan_date, scan_id: scan.scan_id, results: scan.results });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/dashboard/api/history/:domain', requireDashboard, async (req, res) => {
+  try {
+    res.json({ scans: await db.getScanHistory(req.params.domain, 24) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`ESP AI Tracker API running on :${PORT}`));

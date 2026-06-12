@@ -1,0 +1,18 @@
+{
+  "domain": "fiddler.ai",
+  "company_name": "Fiddler AI",
+  "icp_description": "AI observability and model monitoring platform — helps ML and data science teams monitor, explain, analyze, and improve AI models in production. Covers model performance monitoring, data drift detection, explainability, LLM observability, and ML lifecycle management.",
+  "brand_terms": ["fiddler", "fiddler.ai", "fiddler ai"],
+  "competitor_domains": [
+    "arize.com",
+    "whylabs.ai",
+    "arthur.ai",
+    "evidentlyai.com",
+    "aporia.com",
+    "nannyml.com",
+    "superwise.ai",
+    "deepchecks.com",
+    "truera.com",
+    "montecarlo.ai"
+  ]
+}

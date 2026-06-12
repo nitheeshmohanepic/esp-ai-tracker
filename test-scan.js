@@ -9,11 +9,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const TEST_DOMAIN = 'singulr.ai';
 const TEST_PROMPTS = [
-  { prompt_id: 't01', topic_bucket: 'AI Governance', query: 'What are the best AI governance platforms for enterprise security?' },
-  { prompt_id: 't02', topic_bucket: 'AI Governance', query: 'How do CISOs manage AI model risk and compliance in 2025?' },
-  { prompt_id: 't03', topic_bucket: 'Shadow AI', query: 'What tools detect and control shadow AI usage in enterprises?' },
-  { prompt_id: 't04', topic_bucket: 'AI Agent Security', query: 'How do companies secure and govern AI agents in production?' },
-  { prompt_id: 't05', topic_bucket: 'Competitor', query: 'What are the top AI security and governance vendors competing with Protect AI and Lakera?' },
+  { id: 't01', topic_bucket: 'ML Observability', query: 'What are the best ML model monitoring and observability platforms for production AI?' },
+  { id: 't02', topic_bucket: 'ML Observability', query: 'How do data science teams monitor AI model performance and detect drift in production?' },
+  { id: 't03', topic_bucket: 'ML Observability', query: 'What tools do MLOps teams use to explain and monitor machine learning models?' },
+  { id: 't04', topic_bucket: 'AI Risk', query: 'What platforms help enterprises manage AI model risk and explainability?' },
+  { id: 't05', topic_bucket: 'AI Risk', query: 'What are the top AI model monitoring vendors for financial services and insurance?' },
 ];
 
 // Write test prompts to a temp location
