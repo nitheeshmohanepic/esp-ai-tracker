@@ -149,7 +149,7 @@ function makeDetectors(brandTerms, competitorDomains) {
   };
 }
 
-function snippet(text, len = 400) { return (text || '').slice(0, len); }
+function snippet(text, len = 2000) { return (text || '').slice(0, len); }
 
 function nullResult(err) {
   return {
