@@ -332,6 +332,14 @@ app.get('/dashboard/api/history/:domain', requireDashboard, async (req, res) => 
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+app.get('/dashboard/gap-report/:domain', requireDashboard, (req, res) => {
+  const p = path.join(__dirname, 'data', req.params.domain, 'gap_report.pdf');
+  if (!fs.existsSync(p)) return res.status(404).send('No gap report found — run the gap analysis first');
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${req.params.domain}-gap-report.pdf"`);
+  fs.createReadStream(p).pipe(res);
+});
+
 app.get('/dashboard/report/:domain', requireDashboard, async (req, res) => {
   const domain = req.params.domain;
   const scanPath = path.join(__dirname, 'data', domain, 'latest_scan.json');

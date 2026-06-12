@@ -156,6 +156,7 @@ select:focus,input[type=text]:focus{border-color:var(--accent)}
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn" id="btn-scan" style="display:none" onclick="triggerScan()">Run Scan</button>
+      <button class="btn" id="btn-gap" style="display:none" onclick="downloadGapReport()">Gap Report</button>
       <button class="btn" id="btn-report" style="display:none" onclick="downloadReport()">Download Report</button>
     </div>
   </div>
@@ -215,6 +216,7 @@ function renderOverview() {
   document.getElementById('topbar-title').textContent = 'Overview';
   document.getElementById('topbar-meta').textContent = `${state.clients.length} clients`;
   document.getElementById('btn-scan').style.display = 'none';
+  document.getElementById('btn-gap').style.display = 'none';
   document.getElementById('btn-report').style.display = 'none';
 
   const total = state.clients.length;
@@ -271,6 +273,7 @@ async function selectClient(domain) {
   document.getElementById('topbar-title').textContent = client?.company_name || domain;
   document.getElementById('topbar-meta').textContent = domain;
   document.getElementById('btn-scan').style.display = '';
+  document.getElementById('btn-gap').style.display = '';
   document.getElementById('btn-report').style.display = '';
   document.getElementById('content').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
 
@@ -691,6 +694,10 @@ async function pollScan(jobId, btn) {
 async function getApiKey() {
   // Fetch from a lightweight endpoint that echoes the configured key
   return document.body.dataset.apikey || '';
+}
+function downloadGapReport() {
+  if (!state.selected) return;
+  window.open(`/dashboard/gap-report/${state.selected}`, '_blank');
 }
 function downloadReport() {
   if (!state.selected) return;
