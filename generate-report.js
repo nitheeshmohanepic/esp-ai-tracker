@@ -6,6 +6,15 @@ import puppeteer from 'puppeteer-core';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// ── Load .env ─────────────────────────────────────────────────────────────
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+    const m = line.match(/^([^#=\s][^=]*)=(.*)/);
+    if (m && !process.env[m[1].trim()]) process.env[m[1].trim()] = m[2].trim();
+  }
+}
+
 // ── Exported function ─────────────────────────────────────────────────────
 export async function generateReport(domain) {
   return _generate(domain);
@@ -161,7 +170,8 @@ Rules:
       }),
     });
     const data = await res.json();
-    const text = data.content?.[0]?.text || '';
+    const raw = data.content?.[0]?.text || '';
+    const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
     const parsed = JSON.parse(text);
     return parsed.map((a, i) => ({ n: String(i + 1).padStart(2, '0'), title: a.title, body: a.body }));
   } catch (err) {
