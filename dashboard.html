@@ -71,6 +71,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
 
 /* Table */
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.table-scroll{overflow-x:auto}
 .table-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .table-title{font-size:13px;font-weight:600}
 table{width:100%;border-collapse:collapse}
@@ -281,6 +282,16 @@ async function selectClient(domain) {
   state.results = resultsResp.status === 'fulfilled' ? resultsResp.value : null;
   state.history = histResp.status === 'fulfilled' ? (histResp.value.scans || []) : [];
 
+  // Update sidebar % from actual scan data
+  if (state.results?.results) {
+    const results = state.results.results;
+    const hits = results.filter(r => ENGINES.some(k => r.engines?.[k]?.brand_mentioned)).length;
+    const actualPct = pct(hits, results.length);
+    const c = state.clients.find(c => c.domain === domain);
+    if (c) c.overall_pct = actualPct;
+    renderSidebar();
+  }
+
   renderClientView();
 }
 
@@ -432,6 +443,7 @@ function buildPromptsTab() {
         <div class="table-title">Prompt Results</div>
         <div style="font-size:12px;color:var(--dim)" id="prompt-count">${results.length} prompts</div>
       </div>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th>ID</th>
@@ -443,6 +455,7 @@ function buildPromptsTab() {
           ${renderPromptRows(results)}
         </tbody>
       </table>
+      </div>
     </div>`;
 }
 
@@ -556,11 +569,14 @@ function renderHistoryChart() {
 function buildCompetitorsTab() {
   if (!state.results?.results) return '<div class="empty">No scan data yet.</div>';
   const results = state.results.results;
+  const ownDomain = state.selected || '';
   const counts = {};
   for (const r of results) {
     for (const e of ENGINES) {
       const eng = r.engines?.[e];
       for (const c of [...(eng?.competitors_mentioned||[]), ...(eng?.detected_competitors||[])]) {
+        // Skip the client's own domain
+        if (c === ownDomain || c === ownDomain.replace(/^www\./, '')) continue;
         if (!counts[c]) counts[c] = { total: 0, byEngine: {} };
         counts[c].total++;
         counts[c].byEngine[e] = (counts[c].byEngine[e]||0) + 1;
@@ -653,10 +669,7 @@ async function getApiKey() {
 }
 function downloadReport() {
   if (!state.selected) return;
-  window.open(`/report/${state.selected}?ds=${getCookie('ds')}`, '_blank');
-}
-function getCookie(name) {
-  return document.cookie.split(';').map(c=>c.trim().split('=')).find(([k])=>k===name)?.[1] || '';
+  window.open(`/dashboard/report/${state.selected}`, '_blank');
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────

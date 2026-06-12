@@ -310,5 +310,30 @@ app.get('/dashboard/api/history/:domain', requireDashboard, async (req, res) => 
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+app.get('/dashboard/report/:domain', requireDashboard, async (req, res) => {
+  const domain = req.params.domain;
+  const scanPath = path.join(__dirname, 'data', domain, 'latest_scan.json');
+  if (!fs.existsSync(scanPath)) {
+    try {
+      const scan = await db.getLatestScan(domain);
+      if (!scan) return res.status(404).send('No scan results found — run a scan first');
+      fs.mkdirSync(path.join(__dirname, 'data', domain), { recursive: true });
+      fs.writeFileSync(scanPath, JSON.stringify({
+        domain, scan_date: scan.scan_date, scan_id: scan.scan_id,
+        total_prompts: scan.prompts_tested, overall_pct: scan.overall_pct,
+        engines_run: scan.engines_run, results: scan.results,
+      }, null, 2));
+    } catch (err) { return res.status(500).send(err.message); }
+  }
+  try {
+    const pdfPath = await generateReport(domain);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${domain}-visibility-report.pdf"`);
+    fs.createReadStream(pdfPath).pipe(res);
+  } catch (err) {
+    res.status(500).send(`Report generation failed: ${err.message}`);
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`ESP AI Tracker API running on :${PORT}`));
