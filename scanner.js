@@ -241,7 +241,7 @@ function makeEngines(detect) {
 }
 
 // ── Main scan — exported for use by server.js ─────────────────────────────
-export async function scan(domain) {
+export async function scan(domain, { job_id, onProgress } = {}) {
   const promptsFile = path.join(__dirname, 'data', domain, 'prompts.json');
   const clientFile  = path.join(__dirname, 'data', domain, 'client.json');
   const outFile     = path.join(__dirname, 'data', domain, 'latest_scan.json');
@@ -251,7 +251,7 @@ export async function scan(domain) {
   const prompts = JSON.parse(fs.readFileSync(promptsFile, 'utf8'));
   const client  = fs.existsSync(clientFile) ? JSON.parse(fs.readFileSync(clientFile, 'utf8')) : {};
 
-  const brandTerms       = client.brand_terms       || [domain.replace(/\..+$/, ''), domain];
+  const brandTerms        = client.brand_terms        || [domain.replace(/\..+$/, ''), domain];
   const competitorDomains = client.competitor_domains || [];
 
   console.log(`[${domain}] ${prompts.length} prompts | brands: ${brandTerms.join(', ')}`);
@@ -274,6 +274,7 @@ export async function scan(domain) {
 
     completed++;
     process.stdout.write(`[${completed}/${prompts.length}] ${p.query.slice(0, 70)}\n`);
+    if (onProgress) await onProgress(completed, prompts.length);
 
     const result = {
       openai:      oai.status    === 'fulfilled' ? oai.value    : nullResult(oai.reason),
@@ -282,7 +283,7 @@ export async function scan(domain) {
       gemini:      gemini.status === 'fulfilled' ? gemini.value : nullResult(gemini.reason),
     };
 
-    // Save full responses separately
+    // Save full responses to filesystem for later verification
     fs.writeFileSync(
       path.join(responsesDir, `${p.id}.json`),
       JSON.stringify({
@@ -305,19 +306,37 @@ export async function scan(domain) {
   const settled = await Promise.allSettled(tasks);
   const results = settled.map(r => r.status === 'fulfilled' ? r.value : { error: r.reason?.message });
 
+  // Compute overall visibility %
+  const ENGINE_KEYS = ['openai', 'serpapi_aio', 'claude', 'gemini'];
+  let mentioned = 0, total = 0;
+  for (const r of results) {
+    if (r.error) continue;
+    for (const k of ENGINE_KEYS) { if (r.engines?.[k]) { total++; if (r.engines[k].brand_mentioned) mentioned++; } }
+  }
+  const overall_pct = total > 0 ? Math.round((mentioned / total) * 100) : 0;
+
   const output = {
-    domain,
-    scan_date:     new Date().toISOString(),
-    scan_id:       scanId,
-    total_prompts: prompts.length,
-    engines_run:   ['openai', 'serpapi_aio', 'claude', 'gemini'],
-    results,
+    domain, scan_date: new Date().toISOString(), scan_id: scanId,
+    total_prompts: prompts.length, engines_run: ENGINE_KEYS, overall_pct, results,
   };
 
+  // Write to filesystem (cache for report generation)
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(outFile, JSON.stringify(output, null, 2));
-  console.log(`\nScan complete → ${outFile}`);
-  console.log(`Full responses → ${responsesDir}`);
+
+  // Persist to PostgreSQL if available
+  if (process.env.DATABASE_URL) {
+    try {
+      const { db } = await import('./db.js');
+      await db.completeScan({ scan_id: scanId, results, overall_pct });
+      await db.insertPromptResults(scanId, results);
+      console.log(`[${domain}] Saved to PostgreSQL`);
+    } catch (err) {
+      console.error(`[${domain}] DB write failed:`, err.message);
+    }
+  }
+
+  console.log(`\nScan complete → ${outFile} | visibility: ${overall_pct}%`);
   return output;
 }
 
