@@ -56,14 +56,14 @@ export const db = {
     `, [domain, scan_id, engines_run]);
   },
 
-  async completeScan({ scan_id, results, overall_pct }) {
+  async completeScan({ scan_id, results, overall_pct, competitor_mentions }) {
     const prompts_tested = results.filter(r => !r.error).length;
     await db.query(`
       UPDATE weekly_scans
       SET scan_status = 'done', prompts_tested = $2, overall_pct = $3,
-          results = $4, scan_date = NOW()
+          results = $4, competitor_mentions = $5, scan_date = NOW()
       WHERE scan_id = $1
-    `, [scan_id, prompts_tested, overall_pct, JSON.stringify(results)]);
+    `, [scan_id, prompts_tested, overall_pct, JSON.stringify(results), JSON.stringify(competitor_mentions || {})]);
   },
 
   async failScan(scan_id) {
@@ -101,6 +101,7 @@ export const db = {
           e.brand_mentioned, e.citation_url,
           e.competitors_mentioned || [],
           e.response_snippet, null, // full_response stored in filesystem
+          e.detected_competitors || [],
         ]);
       }
     }
@@ -109,8 +110,8 @@ export const db = {
       await db.query(`
         INSERT INTO prompt_results
           (scan_id, prompt_id, query, topic_bucket, engine, brand_mentioned,
-           citation_url, competitors_mentioned, response_snippet, full_response)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+           citation_url, competitors_mentioned, response_snippet, full_response, detected_competitors)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
       `, row);
     }
   },

@@ -79,6 +79,39 @@ async function withRetry(fn, maxRetries = 3) {
   }
 }
 
+// Matches "Company Name" patterns and domain-like strings in LLM text.
+// Used to surface competitors the pre-loaded list doesn't cover.
+const DOMAIN_RE = /\b([a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.(?:com|ai|io|co|net|org|dev))\b/gi;
+
+// Well-known AI governance / security vendors not always listed as domains
+const KNOWN_VENDOR_PATTERNS = [
+  { name: 'lakera.ai',              pattern: /\blakera\b/i },
+  { name: 'protectai.com',          pattern: /\bprotect\s*ai\b/i },
+  { name: 'hiddenlayer.com',        pattern: /\bhiddenlayer\b/i },
+  { name: 'calypsoai.com',          pattern: /\bcalypso\s*ai\b/i },
+  { name: 'securiti.ai',            pattern: /\bsecuriti\b/i },
+  { name: 'cranium.ai',             pattern: /\bcranium\b/i },
+  { name: 'robustintelligence.com', pattern: /\brobust\s*intelligence\b/i },
+  { name: 'credo.ai',               pattern: /\bcredo\.ai\b/i },
+  { name: 'databricks.com',         pattern: /\bdatabricks\b/i },
+  { name: 'collibra.com',           pattern: /\bcollibra\b/i },
+  { name: 'dataiku.com',            pattern: /\bdataiku\b/i },
+  { name: 'arize.com',              pattern: /\barize\b/i },
+  { name: 'arthur.ai',              pattern: /\barthur\s*(ai|shield)?\b/i },
+  { name: 'fiddler.ai',             pattern: /\bfiddler\b/i },
+  { name: 'whylabs.ai',             pattern: /\bwhylabs\b/i },
+  { name: 'aigovernance.com',       pattern: /\bai\s*governance\s*platform\b/i },
+  { name: 'ibm.com',                pattern: /\bibm\s*(watson|openpages|cloud pak)?\b/i },
+  { name: 'microsoft.com',          pattern: /\bmicrosoft\s*(purview|azure ai)?\b/i },
+  { name: 'google.com',             pattern: /\bgoogle\s*(vertex|cloud ai)?\b/i },
+];
+
+// Domains to ignore when extracting from text (too generic)
+const IGNORE_DOMAINS = new Set([
+  'github.com','linkedin.com','twitter.com','youtube.com','google.com',
+  'aws.com','azure.com','openai.com','anthropic.com','huggingface.co',
+]);
+
 function makeDetectors(brandTerms, competitorDomains) {
   return {
     detectBrand(text) {
@@ -91,10 +124,27 @@ function makeDetectors(brandTerms, competitorDomains) {
       const str = typeof data === 'string' ? data : JSON.stringify(data);
       return brandTerms.some(t => str.toLowerCase().includes(t.toLowerCase()));
     },
+    // Returns { preloaded: string[], detected: string[] }
     detectCompetitors(text) {
-      if (!text || !competitorDomains.length) return [];
-      const lower = text.toLowerCase();
-      return competitorDomains.filter(d => lower.includes(d.toLowerCase()));
+      if (!text) return { preloaded: [], detected: [] };
+
+      // Pre-loaded list (exact match)
+      const preloaded = competitorDomains.filter(d => text.toLowerCase().includes(d.toLowerCase()));
+
+      // Detect additional vendors via known patterns
+      const detectedSet = new Set();
+      for (const { name, pattern } of KNOWN_VENDOR_PATTERNS) {
+        if (pattern.test(text) && !competitorDomains.includes(name)) detectedSet.add(name);
+      }
+      // Extract bare domains from text
+      for (const match of text.matchAll(DOMAIN_RE)) {
+        const domain = match[1].toLowerCase();
+        if (!IGNORE_DOMAINS.has(domain) && !competitorDomains.includes(domain) && !brandTerms.some(b => domain.includes(b.toLowerCase()))) {
+          detectedSet.add(domain);
+        }
+      }
+
+      return { preloaded, detected: [...detectedSet] };
     },
   };
 }
@@ -103,7 +153,8 @@ function snippet(text, len = 400) { return (text || '').slice(0, len); }
 
 function nullResult(err) {
   return {
-    brand_mentioned: false, citation_url: false, competitors_mentioned: [],
+    brand_mentioned: false, citation_url: false,
+    competitors_mentioned: [], detected_competitors: [],
     response_snippet: `ERROR: ${err?.message || 'unknown'}`, full_response: null,
   };
 }
@@ -138,10 +189,12 @@ function makeEngines(detect) {
           for (const c of (item.content || [])) { if (c.type === 'output_text') text += c.text || ''; }
         }
       }
+      const comps = detectCompetitors(JSON.stringify(data));
       return {
         brand_mentioned:       detectBrand(text),
         citation_url:          detectCitationUrl(text) || detectCitationUrl(data),
-        competitors_mentioned: detectCompetitors(JSON.stringify(data)),
+        competitors_mentioned: comps.preloaded,
+        detected_competitors:  comps.detected,
         response_snippet:      snippet(text),
         full_response:         text,
       };
@@ -156,10 +209,12 @@ function makeEngines(detect) {
       if (!res.ok) throw new Error(`SerpAPI HTTP ${res.status}`);
       const data    = await res.json();
       const aioText = data.ai_overview ? JSON.stringify(data.ai_overview) : '';
+      const comps = detectCompetitors(aioText);
       return {
         brand_mentioned:       detectBrand(aioText),
         citation_url:          detectCitationUrl(aioText),
-        competitors_mentioned: detectCompetitors(aioText),
+        competitors_mentioned: comps.preloaded,
+        detected_competitors:  comps.detected,
         response_snippet:      snippet(aioText),
         full_response:         aioText || null,
       };
@@ -191,10 +246,12 @@ function makeEngines(detect) {
       }
       const data = await res.json();
       const text = data.content?.[0]?.text || '';
+      const comps = detectCompetitors(text);
       return {
         brand_mentioned:       detectBrand(text),
         citation_url:          detectCitationUrl(text),
-        competitors_mentioned: detectCompetitors(text),
+        competitors_mentioned: comps.preloaded,
+        detected_competitors:  comps.detected,
         response_snippet:      snippet(text),
         full_response:         text,
       };
@@ -227,10 +284,12 @@ function makeEngines(detect) {
       const text  = parts.map(p => p.text || '').join('');
       const groundingMeta = data.candidates?.[0]?.groundingMetadata || {};
       const allText = text + JSON.stringify(groundingMeta);
+      const comps = detectCompetitors(allText);
       return {
         brand_mentioned:       detectBrand(allText),
         citation_url:          detectCitationUrl(allText),
-        competitors_mentioned: detectCompetitors(allText),
+        competitors_mentioned: comps.preloaded,
+        detected_competitors:  comps.detected,
         response_snippet:      snippet(text),
         full_response:         text,
       };
@@ -306,18 +365,29 @@ export async function scan(domain, { job_id, onProgress } = {}) {
   const settled = await Promise.allSettled(tasks);
   const results = settled.map(r => r.status === 'fulfilled' ? r.value : { error: r.reason?.message });
 
-  // Compute overall visibility %
+  // Compute overall visibility % and aggregate competitor mentions
   const ENGINE_KEYS = ['openai', 'serpapi_aio', 'claude', 'gemini'];
   let mentioned = 0, total = 0;
+  const competitorMentions = {}; // { domain: count } — all competitors seen across all engines
+
   for (const r of results) {
     if (r.error) continue;
-    for (const k of ENGINE_KEYS) { if (r.engines?.[k]) { total++; if (r.engines[k].brand_mentioned) mentioned++; } }
+    for (const k of ENGINE_KEYS) {
+      const e = r.engines?.[k];
+      if (!e) continue;
+      total++;
+      if (e.brand_mentioned) mentioned++;
+      // Aggregate both pre-loaded and detected competitors
+      const allComps = [...(e.competitors_mentioned || []), ...(e.detected_competitors || [])];
+      for (const c of allComps) competitorMentions[c] = (competitorMentions[c] || 0) + 1;
+    }
   }
   const overall_pct = total > 0 ? Math.round((mentioned / total) * 100) : 0;
 
   const output = {
     domain, scan_date: new Date().toISOString(), scan_id: scanId,
-    total_prompts: prompts.length, engines_run: ENGINE_KEYS, overall_pct, results,
+    total_prompts: prompts.length, engines_run: ENGINE_KEYS, overall_pct,
+    competitor_mentions: competitorMentions, results,
   };
 
   // Write to filesystem (cache for report generation)
@@ -328,7 +398,7 @@ export async function scan(domain, { job_id, onProgress } = {}) {
   if (process.env.DATABASE_URL) {
     try {
       const { db } = await import('./db.js');
-      await db.completeScan({ scan_id: scanId, results, overall_pct });
+      await db.completeScan({ scan_id: scanId, results, overall_pct, competitor_mentions: competitorMentions });
       await db.insertPromptResults(scanId, results);
       console.log(`[${domain}] Saved to PostgreSQL`);
     } catch (err) {
