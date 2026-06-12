@@ -300,7 +300,7 @@ function makeEngines(detect) {
 }
 
 // ── Main scan — exported for use by server.js ─────────────────────────────
-export async function scan(domain, { job_id, onProgress } = {}) {
+export async function scan(domain, { job_id, scan_id: providedScanId, onProgress } = {}) {
   const promptsFile = path.join(__dirname, 'data', domain, 'prompts.json');
   const clientFile  = path.join(__dirname, 'data', domain, 'client.json');
   const outFile     = path.join(__dirname, 'data', domain, 'latest_scan.json');
@@ -318,7 +318,7 @@ export async function scan(domain, { job_id, onProgress } = {}) {
   const detect  = makeDetectors(brandTerms, competitorDomains);
   const engines = makeEngines(detect);
 
-  const scanId       = new Date().toISOString().replace(/[:.]/g, '-');
+  const scanId       = providedScanId || new Date().toISOString().replace(/[:.]/g, '-');
   const responsesDir = path.join(__dirname, 'data', domain, 'responses', scanId);
   fs.mkdirSync(responsesDir, { recursive: true });
 

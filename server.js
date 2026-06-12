@@ -95,6 +95,7 @@ app.post('/scan', requireAuth, async (req, res) => {
   // Run scan in background
   scan(domain, {
     job_id,
+    scan_id,
     onProgress: async (completed, total) => {
       await queue.setStatus(job_id, { progress: completed, total });
     },
